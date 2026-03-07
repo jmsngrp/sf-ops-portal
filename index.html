@@ -37,7 +37,6 @@ body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);line-h
 .area-btn.active{color:var(--warm);border-bottom-color:var(--warm);background:var(--warm-dim)}
 
 .main{max-width:1320px;margin:0 auto;padding:1.5rem 2rem 4rem}
-.page-title{font-size:2.4rem;font-weight:300;color:var(--text);text-align:left;padding:2rem 2rem 1.5rem;margin:0;letter-spacing:-0.02em;max-width:1320px;margin:0 auto}
 .section{display:none;animation:fadeIn 0.3s ease}.section.active{display:block}
 .sm-sub{display:none}.sm-sub.active{display:block}
 .df-sub{display:none}.df-sub.active{display:block}
@@ -74,12 +73,13 @@ body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);line-h
 
 /* Tables */
 .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1.5rem;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,0.04)}
-td.arw{font-size:0.68rem;font-weight:700;text-align:center;padding:0.2rem 0.5rem;width:58px;min-width:58px;max-width:58px;opacity:0.85;line-height:1;vertical-align:middle;white-space:nowrap}
+td.arw{font-size:0.62rem;font-weight:700;text-align:center;padding:0.2rem 0.15rem;width:35px;min-width:35px;max-width:35px;opacity:0.85;line-height:1;vertical-align:middle;white-space:nowrap}
 table{width:100%;border-collapse:collapse;font-size:0.84rem;table-layout:fixed}
 thead th{background:var(--surface2);color:var(--text-muted);font-weight:700;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;padding:0.7rem 1rem;text-align:right;border-bottom:2px solid var(--border);white-space:nowrap}
 thead th:first-child{text-align:left;width:28%}
 tbody td{padding:0.55rem 1rem;border-bottom:1px solid var(--surface2);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tbody td:first-child{text-align:left;color:var(--text-muted);font-weight:700;white-space:normal}
+
 tbody tr:hover{background:var(--accent-dim)}
 tbody tr.total-row{background:var(--surface2)}
 tbody tr.total-row td{border-top:2px solid var(--border);font-weight:900}
@@ -191,15 +191,14 @@ try{
 
 
 
-<h1 class="page-title">Safe Families WI 2025 Metrics</h1>
 
+<div style="padding:2rem 0 1rem;text-align:center;background:#fff"><h1 style="font-size:1.8rem;font-weight:300;color:var(--text);letter-spacing:0.02em;margin:0">Safe Families for Children <span style="color:var(--accent)">WI</span></h1></div>
 <div class="filter-bar"><div class="filter-inner">
   <div class="nav-group">
-    <button class="nav-btn active" data-s="overview">Overview Financials</button>
-    <button class="nav-btn" data-s="pnl">Detailed Financials</button>
-    
-    
-    
+    <button class="nav-btn active" data-s="exec">Executive Summary</button>
+    <button class="nav-btn" data-s="state-mission">Impact</button>
+    <button class="nav-btn" data-s="pnl">Financials</button>
+    <button class="nav-btn" data-s="impact-cost">Impact Cost</button>
   </div>
   <div class="area-filter">
     <label>Area</label>
@@ -208,101 +207,86 @@ try{
 </div></div>
 
 <main class="main">
-<div class="section active" id="overview">
-  <h2 class="section-title">Overview Financials <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">As of 12/31/2025</span></h2>
-  <div class="kpi-grid" id="ov-kpis"></div>
-  <div class="chart-box full" style="margin-top:1.2rem">
-    <h3 id="ov-area-title">Fundraising By Area</h3>
-    <div id="ov-area-bars"></div>
+<div class="section" id="exec">
+  <h2 class="section-title">Executive Summary <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">Year-End 2025</span></h2>
+  <div id="exec-content"></div>
+  <div class="kpi-grid" id="exec-kpis" style="margin-top:0"></div>
+  <div class="chart-box full" style="margin-top:1.2rem" id="exec-chart-box">
+    <h3 id="exec-chart-title" style="font-size:1.2rem"></h3>
+    <div id="exec-chart"></div>
   </div>
 </div>
+
+
 
 <div class="section" id="pnl">
-  <h2 class="section-title">Detailed Financials <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">As of 12/31/2025</span></h2>
+  <h2 class="section-title">Financials <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">As of 12/31/2025</span></h2>
   <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.2rem">
-    <button class="sm-tab active" data-df="cash" onclick="switchDF(this)">Cash Balance Summary</button>
-    <button class="sm-tab" data-df="activity" onclick="switchDF(this)">Income Statement</button>
-    <button class="sm-tab" data-df="revenue" onclick="switchDF(this)">Revenue Detail</button>
-    <button class="sm-tab" data-df="expense" onclick="switchDF(this)">Expense Detail</button>
+    <button class="sm-tab active" data-df="overview" onclick="switchDF(this)">Overview</button>
+    <button class="sm-tab" data-df="cashflow" onclick="switchDF(this)">Financial Statement</button>
   </div>
-  <div class="df-sub" id="df-activity">
-    <div class="chart-box full">
-      <h3>Income Statement</h3>
-      <div class="df-area-tabs" id="df-area-tabs-activity"></div>
-      <div id="pnl-table-wrap" class="table-wrap"><table id="pnl-table"></table></div>
+
+
+
+  <div class="df-sub active" id="df-overview">
+    <div class="kpi-grid" id="ov-kpis"></div>
+    <div class="chart-box full" style="margin-top:1.2rem">
+      <h3 id="ov-area-title" style="font-size:1.2rem"></h3>
+      <div id="ov-area-bars"></div>
     </div>
   </div>
-  <div class="df-sub" id="df-revenue">
+  <div class="df-sub" id="df-cashflow">
     <div class="chart-box full">
-      <h3>Revenue by Source</h3>
-      <div class="df-area-tabs" id="df-area-tabs-revenue"></div>
-      <div id="rev-bars"></div>
-    </div>
-  </div>
-  <div class="df-sub" id="df-expense">
-    <div class="chart-box full">
-      <h3>Expense Detail</h3>
-      <div class="df-area-tabs" id="df-area-tabs-expense"></div>
-      <div id="exp-breakdown"></div>
-    </div>
-  </div>
-  <div class="df-sub active" id="df-cash">
-    <div class="chart-box full">
-      <h3>Cash Balance Summary</h3>
-      <div class="df-area-tabs" id="df-area-tabs-cash"></div>
-      <div style="font-size:0.88rem;color:var(--text);margin-bottom:1.2rem;line-height:1.6;opacity:0.8"><div style="font-weight:900;color:var(--blue);font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.3rem">What’s Shown Here</div><div style="font-size:0.85rem;color:var(--text);opacity:0.8">A simple cash flow view for each area: starting balance, what came in, what went out, and where we ended up.</div></div><div><div style="font-weight:900;color:var(--blue);font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.3rem">Key Insight</div><div style="font-size:0.85rem;color:var(--text);opacity:0.8;font-style:italic">With no significant long-term assets or liabilities, this is essentially a true cash flow statement. The net change equals net income — what’s in the bank is what we’ve earned minus what we’ve spent.</div></div>
-      <div id="cash-table"></div>
+      <h3 style="font-size:1.2rem"><span id="df-inline-cashflow" style="display:inline"></span></h3>
+      <div id="cashflow-content"></div>
     </div>
   </div>
 </div>
 
-<div class="section" id="state-mission" style="display:none!important">
-  <h2 class="section-title">Impact Overview</h2>
+<div class="section" id="state-mission">
+  <h2 class="section-title">Impact</h2>
   <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:1.2rem">
     <button class="sm-tab active" data-sm="people" onclick="switchSM(this)">People Served</button>
     <button class="sm-tab" data-sm="vol" onclick="switchSM(this)">Volunteering</button>
     <button class="sm-tab" data-sm="rel" onclick="switchSM(this)">Relationships</button>
-    <button class="sm-tab" data-sm="intake" onclick="switchSM(this)">Intake</button>
+    <button class="sm-tab" data-sm="outcomes" onclick="switchSM(this)">Outcomes</button>
+    <button class="sm-tab" data-sm="intake" onclick="switchSM(this)">Referrals</button>
   </div>
   <div class="sm-sub active" id="sm-people">
     <div class="kpi-grid" id="sm-people-kpis"></div>
-    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-people-area-title">Avg Monthly Families By Area</h3><div id="sm-people-area"></div></div>
+    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-people-area-title" style="font-size:1.2rem">Avg Monthly Families By Area</h3><div id="sm-people-area"></div></div>
   </div>
   <div class="sm-sub" id="sm-vol">
     <div class="kpi-grid" id="sm-vol-kpis"></div>
-    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-vol-area-title">Total Volunteers (Year-End) By Area</h3><div id="sm-vol-area"></div></div>
+    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-vol-area-title" style="font-size:1.2rem">Total Volunteers (Year-End) By Area</h3><div id="sm-vol-area"></div></div>
   </div>
   <div class="sm-sub" id="sm-rel">
     <div class="kpi-grid" id="sm-rel-kpis"></div>
-    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-rel-area-title">Total Active Relationships By Area</h3><div id="sm-rel-area"></div></div>
+    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-rel-area-title" style="font-size:1.2rem">Total Active Relationships By Area</h3><div id="sm-rel-area"></div></div>
+  </div>
+  <div class="sm-sub" id="sm-outcomes">
+    <div class="kpi-grid" id="sm-outcomes-kpis"></div>
+    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-outcomes-area-title" style="font-size:1.2rem">Graduations By Area</h3><div id="sm-outcomes-area"></div></div>
   </div>
   <div class="sm-sub" id="sm-intake">
     <div class="kpi-grid" id="sm-intake-kpis"></div>
-    <div class="chart-row" style="margin-top:1rem">
-      <div class="chart-box"><h3 id="sm-intake-area-title">Total Intakes By Area</h3><div id="sm-intake-area"></div></div>
-      <div class="chart-box"><h3>Intake Funnel</h3><div id="sm-intake-funnel"></div></div>
-    </div>
+    <div class="chart-box full" style="margin-top:1rem"><h3 id="sm-intake-area-title" style="font-size:1.2rem">Total Intakes By Area</h3><div id="sm-intake-area"></div></div>
   </div>
 </div>
 
 <div class="section" id="local-mission" style="display:none!important">
-  <h2 class="section-title">Local Mission Impact <span class="area-badge" id="lm-badge"></span></h2>
-  <div class="kpi-grid" id="lm-kpis"></div>
-  <div class="chart-row">
-    <div class="chart-box"><h3>Impact Growth (YoY)</h3><div id="lm-bars"></div></div>
-    <div class="chart-box"><h3>Intake Funnel</h3><div id="lm-funnel"></div></div>
-  </div>
-  <div class="chart-box full" style="margin-top:1.2rem">
-    <h3>Detailed Metrics</h3>
-    <div class="table-wrap"><table id="lm-table"></table></div>
-  </div>
+  <h2 class="section-title">Area Summary <span class="area-badge" id="lm-badge"></span></h2>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:1rem"><button id="lm-share-btn" onclick="shareLmLink()" style="padding:0.4rem 1rem;font-size:0.72rem;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:Lato,sans-serif">Copy Share Link</button></div>
+  <div id="lm-summary"></div>
 </div>
 
-<div class="section" id="impact-cost" style="display:none!important">
-  <h2 class="section-title">Impact Cost <span class="area-badge" id="ic-badge"></span></h2>
-  <div class="eff-grid" id="eff-cards"></div>
-  <h3 style="font-size:1rem;font-weight:900;margin:1.5rem 0 0.8rem">Revenue & Overhead Efficiency</h3>
-  <div class="eff-grid" id="eff-rev"></div>
+<div class="section" id="impact-cost">
+  <h2 class="section-title">Impact Cost</h2>
+  <div class="kpi-grid" id="ic-kpis"></div>
+  <div class="chart-box full" style="margin-top:1.2rem">
+    <h3 id="ic-area-title" style="font-size:1.2rem"></h3>
+    <div id="ic-area-bars"></div>
+  </div>
 </div>
 
 </main>
@@ -320,50 +304,135 @@ const chgCls=(v,lower)=>{if(v==null)return'neutral';if(lower)return v<-0.05?'goo
 const pill=(a,b)=>{if(!a||!b||a===0)return'';const c=(b-a)/Math.abs(a);return` <span class="pill ${c>0.02?'up':c<-0.02?'down':''}">${c>0?'+':''}${(c*100).toFixed(0)}%</span>`};
 const barColors=['a','b','c','d','e','f','g'];
 
+const areaLabel=n=>n==='WI Statewide'?'Statewide Support':n==='All Areas'?'WI Combined':n==='__local_grouped__'?'Local Sites Combined':n;
 let area='All Areas';
+let barView='area'; // 'area' or 'grouped'
+
+function buildViewSelector(titleEl,metricLabel){
+  const el=$(titleEl);
+  if(!el)return;
+  const viewLabel=barView==='area'?'By Area':'Local & Statewide Support';
+  el.innerHTML=metricLabel+' <span class="area-select-wrap" style="display:inline;vertical-align:baseline;margin-left:0"><button class="area-select-btn" onclick="toggleBarView(this,\''+titleEl.replace('#','')+'\',\''+metricLabel.replace(/'/g,"\\'")+'\');event.stopPropagation()" style="font-size:inherit;padding:0;border:none;background:none;color:var(--accent);font-weight:inherit;cursor:pointer"><span>'+viewLabel+'</span> <svg viewBox="0 0 10 6" width="8" height="8" style="vertical-align:middle;opacity:0.5"><path d="M0 0l5 6 5-6z" fill="currentColor"/></svg></button><div class="area-select-drop" style="min-width:180px"><button class="area-select-item'+(barView==='area'?' active':'')+'" onclick="setBarView(\'area\');event.stopPropagation()">By Area</button><button class="area-select-item'+(barView==='grouped'?' active':'')+'" onclick="setBarView(\'grouped\');event.stopPropagation()">Local & Statewide Support</button></div></span>';
+}
+
+window.toggleBarView=function(btn){
+  const wrap=btn.closest('.area-select-wrap');
+  document.querySelectorAll('.area-select-wrap.open').forEach(w=>{if(w!==wrap)w.classList.remove('open')});
+  wrap.classList.toggle('open');
+};
+
+window.setBarView=function(v){
+  barView=v;
+  document.querySelectorAll('.area-select-wrap').forEach(w=>w.classList.remove('open'));
+  render();
+};
+
 
 // Populate area tabs
 const tabsEl=$('#areaTabs');
-// Populate DF area tabs
-function buildDfAreaTabs(containerId){
+// Area dropdown builder for Financial Detail sub-tabs
+const dfAreaOptions=[
+  {value:'All Areas',label:'WI Combined'},
+  {value:'__local__',label:'Local Sites (Excl. Statewide)'},
+  ...D.field_areas.map(a=>({value:a,label:areaLabel(a)}))
+];
+
+function buildDfInline(containerId,prefix){
   const el=$('#'+containerId);
   if(!el)return;
   el.innerHTML='';
-  D.areas.forEach(a=>{
+  const currentLabel=area==='__local__'?'Local Sites (Excl. Statewide)':areaLabel(area);
+  let html=prefix?'<span style="color:var(--text)">'+prefix+' </span>':'';html+='<span class="area-select-wrap df-area-dd" style="display:inline;vertical-align:baseline;margin-left:0">';
+  html+='<button class="area-select-btn" onclick="toggleDfDd(this)" style="font-size:inherit;padding:0;border:none;background:none;color:var(--accent);font-weight:inherit;cursor:pointer">';
+  html+='<span class="dd-label">'+currentLabel+'</span> <svg viewBox="0 0 10 6" width="8" height="8" style="vertical-align:middle;opacity:0.5"><path d="M0 0l5 6 5-6z" fill="currentColor"/></svg>';
+  html+='</button><div class="area-select-drop dd-drop"></div></span>';
+  el.innerHTML=html;
+  const drop=el.querySelector('.dd-drop');
+  dfAreaOptions.forEach(opt=>{
     const b=document.createElement('button');
-    b.className='df-area-tab'+(a===area?' active':'');
-    b.textContent=a;
+    b.className='area-select-item'+(opt.value===area?' active':'');
+    b.textContent=opt.label;
     b.onclick=()=>{
-      area=a;
-      document.querySelectorAll('.df-area-tab').forEach(x=>x.classList.remove('active'));
-      document.querySelectorAll('.df-area-tab').forEach(x=>{if(x.textContent===a)x.classList.add('active')});
-      document.querySelectorAll('.area-btn').forEach(x=>x.classList.remove('active'));
-      document.querySelectorAll('.area-btn').forEach(x=>{if(x.dataset.area===a)x.classList.add('active')});
+      area=opt.value;
+      document.querySelectorAll('.df-area-dd .dd-label').forEach(l=>l.textContent=opt.label);
+      document.querySelectorAll('.df-area-dd .area-select-item').forEach(x=>{x.classList.remove('active');if(x.textContent===opt.label)x.classList.add('active')});
+      document.querySelectorAll('.area-select-wrap').forEach(w=>w.classList.remove('open'));
       render();
     };
-    el.appendChild(b);
+    drop.appendChild(b);
   });
 }
-buildDfAreaTabs('df-area-tabs-activity');
-buildDfAreaTabs('df-area-tabs-revenue');
-buildDfAreaTabs('df-area-tabs-expense');
-buildDfAreaTabs('df-area-tabs-cash');
 
-D.areas.forEach(a=>{const b=document.createElement('button');b.className='area-btn'+(a==='All Areas'?' active':'');b.textContent=a;b.dataset.area=a;b.addEventListener('click',()=>{document.querySelectorAll('.area-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');area=a;document.querySelectorAll('.df-area-tab').forEach(x=>{x.classList.remove('active');if(x.textContent===a)x.classList.add('active')});render()});tabsEl.appendChild(b)});
+function buildDfDropdown(containerId){
+  const el=$('#'+containerId);
+  if(!el)return;
+  el.innerHTML='';
+  const wrap=document.createElement('div');
+  wrap.className='area-select-wrap';
+  const currentLabel=area==='__local__'?'Local Sites (Excl. Statewide)':areaLabel(area);
+  wrap.innerHTML='<button class="area-select-btn" onclick="toggleDfDd(this)"><span class="dd-label">'+currentLabel+'</span><svg viewBox="0 0 10 6" width="10" height="10"><path d="M0 0l5 6 5-6z" fill="currentColor"/></svg></button><div class="area-select-drop dd-drop"></div>';
+  const drop=wrap.querySelector('.dd-drop');
+  dfAreaOptions.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='area-select-item'+(opt.value===area?' active':'');
+    b.textContent=opt.label;
+    b.onclick=()=>{
+      area=opt.value;
+      document.querySelectorAll('.df-area-dd .dd-label').forEach(l=>l.textContent=opt.label);
+      document.querySelectorAll('.df-area-dd .area-select-item').forEach(x=>{x.classList.remove('active');if(x.textContent===opt.label)x.classList.add('active')});
+      document.querySelectorAll('.area-select-wrap').forEach(w=>w.classList.remove('open'));
+      render();
+    };
+    drop.appendChild(b);
+  });
+  el.appendChild(wrap);
+}
+
+window.toggleDfDd=function(btn){
+  const wrap=btn.closest('.area-select-wrap');
+  document.querySelectorAll('.area-select-wrap.open').forEach(w=>{if(w!==wrap)w.classList.remove('open')});
+  wrap.classList.toggle('open');
+};
+document.addEventListener('click',e=>{if(!e.target.closest('.area-select-wrap'))document.querySelectorAll('.area-select-wrap.open').forEach(w=>w.classList.remove('open'))});
+
+
+buildDfInline('df-inline-cashflow','Financial Statement for');
+
+
+// Share link + URL params
+function shareLmLink(){
+  const url=new URL(window.location.href);
+  url.searchParams.set('area',area);url.searchParams.set('tab','local-mission');
+  navigator.clipboard.writeText(url.toString()).then(()=>{
+    const btn=$('#lm-share-btn');btn.textContent='Link Copied!';btn.style.background='var(--green)';
+    setTimeout(()=>{btn.textContent='Copy Share Link';btn.style.background='var(--accent)'},2000);
+  });
+}
+try{const params=new URLSearchParams(window.location.search);
+if(params.get('area')){area=params.get('area');}
+if(params.get('tab')){setTimeout(()=>{const btn=document.querySelector('.nav-btn[data-s="'+params.get('tab')+'"]');if(btn)btn.click()},100);}
+}catch(e){}
+
+// Populate main area tabs
+D.areas.forEach(a=>{const b=document.createElement('button');b.className='area-btn'+(a==='All Areas'?' active':'');b.textContent=areaLabel(a);b.dataset.area=a;b.addEventListener('click',()=>{document.querySelectorAll('.area-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');area=a;document.querySelectorAll('.df-area-dd .dd-label').forEach(l=>l.textContent=areaLabel(a));render()});tabsEl.appendChild(b)});
 
 // Nav
 document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$('#'+b.dataset.s).classList.add('active');
-  document.querySelector('.area-filter').style.display=(b.dataset.s==='state-mission'||b.dataset.s==='overview'||b.dataset.s==='pnl')?'none':'flex';
+  document.querySelector('.area-filter').style.display=(b.dataset.s==='exec'||b.dataset.s==='state-mission'||b.dataset.s==='overview'||b.dataset.s==='pnl'||b.dataset.s==='impact-cost')?'none':'flex';
 }));
 
 function render(){
   const renderKpis=(kpis,el,opts)=>{let h='';kpis.forEach((k,i)=>{const dir=k.inv?(k.c>0.01?'down':k.c<-0.01?'up':'flat'):(k.c>0.01?'up':k.c<-0.01?'down':'flat');const click=opts&&opts.onClick?` onclick="${opts.onClick}(${i})"`:'';
 h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':''}"${click}><div class="kpi-label">${k.l}</div><div class="kpi-value">${k.v}</div><div class="kpi-change ${dir}">${k.c!=null?((dir==='up'?'\u25b2':dir==='down'?'\u25bc':'\u2014')+' '+(k.c>0?'+':'')+(k.c*100).toFixed(1)+'% vs 2024'):(k.sub||'')}</div></div>`;});$(el).innerHTML=h;};
 
-  const a=area, fa=D.field_areas;
-  document.querySelectorAll('.area-badge').forEach(b=>b.textContent=a);
+  // Handle __local__ aggregation
+  const isLocalView=area==='__local__';
+  const a=isLocalView?'All Areas':area;
+  const fa=D.field_areas;
+  // For local view, we'll filter out WI Statewide in area bars
+  document.querySelectorAll('.area-badge').forEach(b=>b.textContent=areaLabel(a));
 
   // ===== OVERVIEW (always All Areas) =====
   const oa='All Areas';
@@ -394,14 +463,41 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
   const opex25=opex['2025']||0, opex24=opex['2024']||0;
 
   // Financial area bars renderer
-  window.renderFinAreaBars=(metricKey,label,el)=>{
-    const fas=D.field_areas;
-    const barColorMap={'opex':'b','direct_fundraising':'d','gross_revenue':'d','net_income':'d','equity':'d','cogs':'b'};
+  window.renderFinAreaBars=(metricKey,label,el,barColor)=>{
+    let fas;
+    if(barView==='grouped'){
+      fas=['__local_grouped__','WI Statewide'];
+    } else if(isLocalView){
+      fas=D.field_areas.filter(ar=>ar!=='WI Statewide');
+    } else {
+      fas=D.field_areas;
+    }
+    const barColorMap={'opex':'b','direct_fundraising':'d','gross_revenue':'d','net_income':'e','equity':'c','cogs':'b'};
     const barCls=barColorMap[metricKey]||'d';
     let h='';
+    const getGroupedVal=(key,yr)=>{
+      const locals=D.field_areas.filter(x=>x!=='WI Statewide');
+      return locals.reduce((s,ar)=>{
+        const p=D.pnl_by_area[ar];
+        if(key==='direct_fundraising')return s+(D.local_fundraising[yr][ar]||0);
+        if(key==='net_margin'){const p2=D.pnl_by_area[ar];const g=p2[8][yr]||0;const lf=D.local_fundraising[yr][ar]||0;return s+lf;}
+        if(key==='rev_sharing')return s+(D.rev_sharing[yr][ar]||0);
+        if(key==='fundraising_roi'){const p2=D.pnl_by_area[ar];return s+(p2[8][yr]||0);}
+        if(key==='opex')return s+(p[16][yr]||0);
+        if(key==='net_income')return s+(p[18][yr]||0);
+        if(key==='equity')return s+(D.equity[ar]||0);
+        if(key==='gross_revenue')return s+(p[8][yr]||0);
+        if(key==='cogs')return s+(p[9][yr]||0);
+        return s;
+      },0);
+    };
     const getFinVal=(ar,key)=>{
+      if(ar==='__local_grouped__')return getGroupedVal(key,'2025');
       const p=D.pnl_by_area[ar];
       if(key==='direct_fundraising') return D.local_fundraising['2025'][ar]||0;
+      if(key==='net_margin'){const p2=D.pnl_by_area[ar];const g=p2[8]['2025']||0;const lf=D.local_fundraising['2025'][ar]||0;return g>0?lf/g*100:0;}
+      if(key==='rev_sharing'){const v=D.rev_sharing['2025'][ar]||0;return v;}
+      if(key==='fundraising_roi'){const p2=D.pnl_by_area[ar];const g=p2[8]['2025']||0;const fc=p2[9]['2025']||0;return fc>0?g/fc:0;}
       if(key==='opex') return p[16]['2025']||0;
       if(key==='net_income') return p[18]['2025']||0;
       if(key==='equity') return D.equity[ar]||0;
@@ -410,8 +506,12 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
       return 0;
     };
     const getFinVal24=(ar,key)=>{
+      if(ar==='__local_grouped__')return getGroupedVal(key,'2024');
       const p=D.pnl_by_area[ar];
       if(key==='direct_fundraising') return D.local_fundraising['2024'][ar]||0;
+      if(key==='net_margin'){const p2=D.pnl_by_area[ar];const g=p2[8]['2024']||0;const lf=D.local_fundraising['2024'][ar]||0;return g>0?lf/g*100:0;}
+      if(key==='rev_sharing'){return D.rev_sharing['2024'][ar]||0;}
+      if(key==='fundraising_roi'){const p2=D.pnl_by_area[ar];const g=p2[8]['2024']||0;const fc=p2[9]['2024']||0;return fc>0?g/fc:0;}
       if(key==='opex') return p[16]['2024']||0;
       if(key==='net_income') return p[18]['2024']||0;
       if(key==='equity') return 0;
@@ -421,14 +521,17 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
     };
     // Explainer text per metric
     const explainers={
-      'direct_fundraising':{shown:'Local fundraising revenue for each area, net of fundraising costs and before any revenue sharing. The DOA Grant is excluded for a like-for-like comparison across areas.',insight:'This metric shows the current strength and year-over-year momentum of fundraising in each area.'},
-      'opex':{shown:'Program staffing, admin overhead, and operational costs for each area.',insight:'This metric shows what it costs to run each area — and whether spending growth is keeping pace with fundraising.'},
-      'net_income':{shown:'The bottom line for each area: all revenue minus all expenses and revenue sharing.',insight:'This metric shows the bottom line for each area — whether it\'s building reserves or drawing them down.'},
-      'equity':{shown:'Total cash on hand by area, split into the 4.5-month staffing reserve minimum and any growth funds above that target.',insight:'This metric shows total cash in the context of our minimum targets.'},
-      'gross_revenue':{shown:'All income before any deductions — donations, grants, events, and other sources.',insight:'This metric shows total revenue capacity before any costs are subtracted.'},
-      'cogs':{shown:'Event expenses, platform fees, and direct costs tied to raising revenue.',insight:'This metric shows the direct costs of raising revenue — what it takes to bring dollars in the door.'},
+      'direct_fundraising':{shown:'Gross revenue minus fundraising costs, excluding the DOA Grant for like-for-like area comparison. Before revenue sharing.',insight:'Net fundraising revenue by area for 2025, with year-over-year comparison.'},
+      'net_margin':{shown:'Net fundraising divided by gross revenue.',insight:'Net fundraising margin by area for 2025.'},
+      'rev_sharing':{shown:'Net transfers between areas. Positive = receiving, negative = contributing.',insight:'Revenue sharing by area for 2025.'},
+      'fundraising_roi':{shown:'Gross revenue divided by fundraising costs.',insight:'Fundraising ROI by area for 2025.'},
+      'opex':{shown:'Program costs plus admin costs. Does not include fundraising costs.',insight:'This metric shows what it costs to run each area — and whether spending growth is keeping pace with fundraising.'},
+      'net_income':{shown:'All revenue minus all expenses and revenue sharing.',insight:'This metric shows the bottom line for each area — whether it\'s building reserves or drawing them down.'},
+      'equity':{shown:'Ending cash split into reserve minimum (4.5 months of staffing) and growth funds above that.',insight:'Cash on hand by area as of 12/31/2025, shown against the 4.5-month staffing reserve target.'},
+      'gross_revenue':{shown:'All income before any deductions — donations, grants, events, and other sources.',insight:'Total gross revenue by area for 2025, before any deductions.'},
+      'cogs':{shown:'Event expenses, platform fees, and other costs directly tied to fundraising activities.',insight:'This metric shows the direct costs of raising revenue — what it takes to bring dollars in the door.'},
     };
-    const explainerColors={'direct_fundraising':'var(--green)','opex':'var(--warm)','net_income':'var(--rose)','equity':'var(--blue)','gross_revenue':'var(--accent)','cogs':'var(--warm)'};
+    const explainerColors={'direct_fundraising':'var(--green)','net_margin':'var(--green)','rev_sharing':'var(--accent)','fundraising_roi':'var(--blue)','opex':'var(--warm)','net_income':'var(--rose)','equity':'var(--blue)','gross_revenue':'var(--accent)','cogs':'var(--warm)'};
     if(explainers[metricKey]){
       const eCol=explainerColors[metricKey]||'var(--accent)';
       const ex=explainers[metricKey];
@@ -438,22 +541,26 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
     // Special case: equity shows min target + growth funds split
     if(metricKey==='equity'){
       const maxEq=Math.max(...fas.map(ar=>D.equity[ar]||0));
-      [...fas].sort((x,y)=>(D.equity[y]||0)-(D.equity[x]||0)).forEach(ar=>{
-        const aeq=D.equity[ar]||0;
-        const atr=D.target_reserve[ar]||0;
+      [...fas].sort((x,y)=>{const ve=x==='__local_grouped__'?getGroupedVal('equity','2025'):(D.equity[x]||0);const vy=y==='__local_grouped__'?getGroupedVal('equity','2025'):(D.equity[y]||0);return vy-ve}).forEach(ar=>{
+        const aeq=ar==='__local_grouped__'?getGroupedVal('equity','2025'):(D.equity[ar]||0);
+        const atr=ar==='__local_grouped__'?D.field_areas.filter(x=>x!=='WI Statewide').reduce((s,x)=>s+(D.target_reserve[x]||0),0):(D.target_reserve[ar]||0);
         const aGrowth=aeq-atr;
         const tgtW=maxEq>0?Math.min(Math.min(aeq,atr)/maxEq*100,100):0;
         const growthW=aGrowth>0?(aGrowth/maxEq*100):0;
         const gapW=aGrowth<0?((atr-aeq)/maxEq*100):0;
-        h+=`<div class="bar-group"><div class="bar-label"><span>${ar}</span><span>${fmtK(aeq)}</span></div><div class="bar-track"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${tgtW}%;background:var(--warm)"></div>${growthW>0?`<div style="width:${growthW}%;background:var(--accent)"></div>`:''}${gapW>0?`<div style="width:${gapW}%;background:#e0e0e0"></div>`:''}</div></div></div>`;
+        h+=`<div class="bar-group"><div class="bar-label"><span>${areaLabel(ar)}</span><span>${fmtK(aeq)} <span style="font-size:0.68rem;color:${(()=>{const s=D.staffing_2026[ar]||0;const m=s>0?aeq/(s/12):0;return m>=4.5?'var(--green)':m>=3?'var(--warm)':'var(--rose)'})()};font-weight:700">${(()=>{const s=D.staffing_2026[ar]||0;return s>0?(aeq/(s/12)).toFixed(1)+' mo staffing':'N/A'})()}</span></span></div><div class="bar-track"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${tgtW}%;background:var(--warm)"></div>${growthW>0?`<div style="width:${growthW}%;background:var(--accent)"></div>`:''}${gapW>0?`<div style="width:${gapW}%;background:#e0e0e0"></div>`:''}</div></div></div>`;
       });
       h+=`<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:var(--warm)"></div>Minimum Target</div><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Growth Funds</div></div>`;
       $(el).innerHTML=h;
       return;
     }
     const getFinVal23=(ar,key)=>{
+      if(ar==='__local_grouped__')return getGroupedVal(key,'2023');
       const p=D.pnl_by_area[ar];
       if(key==='direct_fundraising') return D.local_fundraising['2023'][ar]||0;
+      if(key==='net_margin'){const p2=D.pnl_by_area[ar];const g=p2[8]['2023']||0;const lf=D.local_fundraising['2023'][ar]||0;return g>0?lf/g*100:0;}
+      if(key==='rev_sharing'){return D.rev_sharing['2023'][ar]||0;}
+      if(key==='fundraising_roi'){const p2=D.pnl_by_area[ar];const g=p2[8]['2023']||0;const fc=p2[9]['2023']||0;return fc>0?g/fc:0;}
       if(key==='opex') return p[16]['2023']||0;
       if(key==='net_income') return p[18]['2023']||0;
       if(key==='equity') return 0;
@@ -486,9 +593,9 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
         const vc3=v3<0?'var(--rose)':'var(--green)';
 
         h+='<div style="margin-bottom:1.8rem">';
-        h+='<div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">'+ar+'</span></div>';
+        h+='<div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">'+areaLabel(ar)+'</span></div>';
         // 2025
-        h+='<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div style="flex:1;background:var(--surface2);border-radius:4px;overflow:hidden">'+divBar(v5,28,1)+'</div><span style="font-size:0.85rem;font-weight:900;min-width:100px;text-align:left;padding-left:0.5rem;color:'+vc5+'">'+fmt(v5)+'</span></div>';
+        h+='<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div style="flex:1;background:var(--surface2);border-radius:4px;overflow:hidden">'+divBar(v5,22,1)+'</div><span style="font-size:0.85rem;font-weight:900;min-width:100px;text-align:left;padding-left:0.5rem;color:'+vc5+'">'+fmt(v5)+'</span></div>';
         // 2024
         h+='<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div style="flex:1;background:var(--surface2);border-radius:4px;overflow:hidden">'+divBar(v4,8,0.5)+'</div><span style="font-size:0.68rem;min-width:100px;text-align:left;padding-left:0.5rem;color:'+vc4+'">'+fmt(v4)+'</span></div>';
         // 2023
@@ -520,38 +627,126 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
 
       h+=`<div style="margin-bottom:1.8rem">`;
       h+=`<div style="margin-bottom:0.3rem">`;
-      h+=`<span style="font-size:0.95rem;font-weight:800;color:var(--text)">${ar}</span>`;
+      h+=`<span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span>`;
       h+=`</div>`;
-      // 2025 bar - same layout as 2024/2023 with total to the right
-      h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:28px"><div class="bar-fill ${barCls}" style="width:${w5}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:100px;text-align:left;padding-left:0.5rem">${fmtK(v5)}${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      // 2025 bar - segmented for opex, solid for others
+      if(metricKey==='opex'&&ar!=='__local_grouped__'){
+        const p=D.pnl_by_area[ar];
+        const aProg=p[14]['2025']||0;
+        const aAdm=p[15]['2025']||0;
+        const progPct=v5>0?aProg/v5*100:0;
+        const admPct=v5>0?aAdm/v5*100:0;
+        h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="width:28px"></span><div style="flex:1;display:flex;font-size:0.58rem;font-weight:700;color:var(--text-dim);margin-bottom:0.1rem"><div style="width:${w5}%;display:flex"><span style="width:${progPct}%;text-align:center">${progPct>=10?Math.round(progPct)+'% Program':''}</span><span style="width:${admPct}%;text-align:center">${admPct>=8?Math.round(admPct)+'% Admin':''}</span></div></div><span style="min-width:100px"></span></div>`;
+        h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div style="display:flex;height:100%;width:${w5}%;border-radius:4px;overflow:hidden"><div style="width:${progPct}%;background:var(--warm)"></div><div style="width:${admPct}%;background:var(--warm);opacity:0.45"></div></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:100px;text-align:left;padding-left:0.5rem">${metricKey==='net_margin'?v5.toFixed(0)+'%':metricKey==='fundraising_roi'?v5.toFixed(0)+'x':fmtK(v5)}${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      } else {
+        h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${barCls}" style="width:${w5}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:100px;text-align:left;padding-left:0.5rem">${metricKey==='net_margin'?v5.toFixed(0)+'%':metricKey==='fundraising_roi'?v5.toFixed(0)+'x':fmtK(v5)}${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      }
       // 2024 bar (lighter)
       const w4=maxV>0?Math.max(v4,0)/maxV*100:0;
       const w3=maxV>0?Math.max(v3,0)/maxV*100:0;
-      h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${barCls}" style="width:${w4}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${fmtK(v4)}${pct1?' <span style="color:'+col1+';font-weight:800">'+pct1+'</span>':''}</span></div>`;
+      h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${barCls}" style="width:${w4}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${metricKey==='net_margin'?v4.toFixed(0)+'%':metricKey==='fundraising_roi'?v4.toFixed(0)+'x':fmtK(v4)}${pct1?' <span style="color:'+col1+';font-weight:800">'+pct1+'</span>':''}</span></div>`;
       // 2023 bar (lightest)
-      if(v3>0){h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.35rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2023</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${barCls}" style="width:${w3}%;opacity:0.3"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${fmtK(v3)}</span></div>`;}
+      if(v3>0){h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.35rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2023</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${barCls}" style="width:${w3}%;opacity:0.3"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${metricKey==='net_margin'?v3.toFixed(0)+'%':metricKey==='fundraising_roi'?v3.toFixed(0)+'x':fmtK(v3)}</span></div>`;}
       h+=`</div>`;
     });
+    if(metricKey==='opex')h+=`<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:var(--warm)"></div>Program</div><div class="legend-item"><div class="legend-dot" style="background:var(--warm);opacity:0.45"></div>Admin</div></div>`;
     $(el).innerHTML=h;
   };
 
   // Overview KPIs - clickable
   window._ovMetrics=[
-    {l:'Net Fundraising',k:'direct_fundraising'},
-    {l:'Operating Expenses',k:'opex'},
-    {l:'Net Income',k:'net_income'},
-    {l:'Cash Reserves',k:'equity'},
+    {l:'Net Fundraising',k:'direct_fundraising',bc:'d'},
+    {l:'Fundraising Margin',k:'net_margin',bc:'d'},
+    {l:'Operating Expenses',k:'opex',bc:'b'},
+    {l:'Revenue Sharing',k:'rev_sharing',bc:'a'},
+    {l:'Net Income',k:'net_income',bc:'e'},
+    {l:'Cash Reserves',k:'equity',bc:'c'},
   ];
+
+  const grossRev25=pnl[8]['2025']||0,grossRev24=pnl[8]['2024']||0;
+  const margin25=grossRev25>0?df25/grossRev25:0;
+  const margin24=grossRev24>0?df24/grossRev24:0;
+  const totalShared25=D.field_areas.reduce((s,ar)=>{const v=D.rev_sharing['2025'][ar]||0;return v>0?s+v:s},0);
+  const totalShared24=D.field_areas.reduce((s,ar)=>{const v=D.rev_sharing['2024'][ar]||0;return v>0?s+v:s},0);
+  const roiOv25=pnl[9]['2025']>0?grossRev25/pnl[9]['2025']:0;
+  const roiOv24=pnl[9]['2024']>0?grossRev24/pnl[9]['2024']:0;
 
   const ovKpiData=[
     {l:'Net Fundraising',v:fmtK(df25),c:yoy(df24,df25),cl:'green'},
+    {l:'Fundraising Margin',v:(margin25*100).toFixed(0)+'%',c:yoy(margin24,margin25),cl:'green',sub:fmtK(df25)+' of '+fmtK(grossRev25)},
     {l:'Operating Expenses',v:fmtK(opex25),c:yoy(opex24,opex25),cl:'warm',inv:1},
+    {l:'Revenue Sharing',v:fmtK(totalShared25),c:yoy(totalShared24,totalShared25),cl:'',sub:'Shared with local sites'},
     {l:'Net Income',v:fmt(net_inc['2025']),c:yoy(net_inc['2024'],net_inc['2025']),cl:net_inc['2025']>=0?'green':'rose'},
     {l:'Cash Reserves',v:fmtK(eq),c:yoy(eq-net_inc['2025'],eq),cl:'blue',sub:reserveMonths.toFixed(1)+' Mo in Reserve'},
   ];
 
   renderKpis(ovKpiData,'#ov-kpis',{onClick:'clickOvKpi'});
-  renderFinAreaBars('direct_fundraising','Net Fundraising','#ov-area-bars');
+  if(window._lastOvIdx==null)window._lastOvIdx=0;
+  // Re-select the last clicked KPI after re-render
+  setTimeout(()=>{clickOvKpi(window._lastOvIdx||0)},0);
+
+
+  // Mission data (needed by exec summary and later)
+  const mv23=(D.mission_v2||{})['2023']||{};
+  const mv24=(D.mission_v2||{})['2024']||{};
+  const mv25=(D.mission_v2||{})['2025']||{};
+  const mAll23=mv23['All Areas']||{};
+  const mAll24=mv24['All Areas']||{};
+  const mAll25=mv25['All Areas']||{};
+
+  // ===== EXECUTIVE SUMMARY =====
+  {
+    const p=D.pnl_by_area['All Areas'];
+    const rev24=p[8]['2024']||0,rev25=p[8]['2025']||0;
+    const exp24=(p[16]['2024']||0)+(p[9]['2024']||0),exp25=(p[16]['2025']||0)+(p[9]['2025']||0);
+    const expGr=yoy(exp24,exp25);
+    const fam25=mAll25.avg_families||0,fam24=mAll24.avg_families||0;
+    const ind25=mAll25.avg_individuals||0,ind24=mAll24.avg_individuals||0;
+    const cpf25=fam25>0?(opex25/12/fam25):0,cpf24=fam24>0?((p[16]['2024']||0)/12/fam24):0;
+    const cpi25=ind25>0?(opex25/12/ind25):0,cpi24=ind24>0?((p[16]['2024']||0)/12/ind24):0;
+    const famChg=yoy(fam24,fam25),indChg=yoy(ind24,ind25);
+    const cpfChg=yoy(cpf24,cpf25),cpiChg=yoy(cpi24,cpi25);
+    const dfChg=yoy(df24,df25);
+
+    window._execMetrics=[
+      {l:'Avg Families / Mo',k:'avg_families',dec:true,bc:'d',type:'mission'},
+      {l:'Avg Individuals / Mo',k:'avg_individuals',dec:true,bc:'c',type:'mission'},
+      {l:'Monthly Cost / Family',k:'fam',bc:'d',type:'cost'},
+      {l:'Monthly Cost / Individual',k:'ind',bc:'c',type:'cost'},
+      {l:'Net Fundraising',k:'direct_fundraising',bc:'d',type:'fin'},
+      {l:'Operating Expenses',k:'opex',bc:'b',type:'fin'},
+    ];
+
+    // Narrative section labels
+    let eh='';
+    eh+=`<div style="display:flex;gap:1.5rem;margin-bottom:1.2rem;flex-wrap:wrap">`;
+    eh+=`<div style="flex:1;min-width:200px;padding:0.6rem 0;border-bottom:3px solid var(--green)"><div style="font-size:0.95rem;font-weight:800;color:var(--green)">We're serving more families.</div><div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Average monthly caseload grew year-over-year.</div></div>`;
+    eh+=`<div style="flex:1;min-width:200px;padding:0.6rem 0;border-bottom:3px solid var(--accent)"><div style="font-size:0.95rem;font-weight:800;color:var(--accent)">We're doing it more efficiently.</div><div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Cost per family and individual both decreased.</div></div>`;
+    eh+=`<div style="flex:1;min-width:200px;padding:0.6rem 0;border-bottom:3px solid var(--warm)"><div style="font-size:0.95rem;font-weight:800;color:var(--warm)">Revenue outpaced expense growth.</div><div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem">Net fundraising grew ${df24>0?((dfChg*100).toFixed(0)):''}% vs ${expGr!=null?(expGr*100).toFixed(0):''}% expense growth.</div></div>`;
+    eh+=`</div>`;
+    $('#exec-content').innerHTML=eh;
+
+    // Build all 6 KPIs in the kpi-grid with visual sub-grouping
+    const selIdx=window._lastExecIdx||0;
+    let kh='';
+
+    // Group 1: Serving
+    kh+=`<div class="kpi-card green${selIdx===0?' kpi-selected':''}" onclick="clickExecKpi(0)" style="border-top:3px solid var(--green)"><div class="kpi-label" style="font-size:0.62rem">AVG FAMILIES / MO</div><div class="kpi-value">${fam25.toFixed(0)}</div><div class="kpi-change ${fam25>fam24?'up':'down'}">${famChg!=null?((fam25>fam24?'\u25b2':'\u25bc')+' '+(famChg>0?'+':'')+(famChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    kh+=`<div class="kpi-card blue${selIdx===1?' kpi-selected':''}" onclick="clickExecKpi(1)" style="border-top:3px solid var(--green)"><div class="kpi-label" style="font-size:0.62rem">AVG INDIVIDUALS / MO</div><div class="kpi-value">${ind25.toFixed(0)}</div><div class="kpi-change ${ind25>ind24?'up':'down'}">${indChg!=null?((ind25>ind24?'\u25b2':'\u25bc')+' '+(indChg>0?'+':'')+(indChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+
+    // Group 2: Efficiency
+    kh+=`<div class="kpi-card green${selIdx===2?' kpi-selected':''}" onclick="clickExecKpi(2)" style="border-top:3px solid var(--accent)"><div class="kpi-label" style="font-size:0.62rem">COST / FAMILY / MO</div><div class="kpi-value">${fmt(Math.round(cpf25))}</div><div class="kpi-change ${cpf25<cpf24?'down':'up'}">${cpfChg!=null?((cpf25<cpf24?'\u25bc':'\u25b2')+' '+(cpfChg>0?'+':'')+(cpfChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    kh+=`<div class="kpi-card blue${selIdx===3?' kpi-selected':''}" onclick="clickExecKpi(3)" style="border-top:3px solid var(--accent)"><div class="kpi-label" style="font-size:0.62rem">COST / INDIVIDUAL / MO</div><div class="kpi-value">${fmt(Math.round(cpi25))}</div><div class="kpi-change ${cpi25<cpi24?'down':'up'}">${cpiChg!=null?((cpi25<cpi24?'\u25bc':'\u25b2')+' '+(cpiChg>0?'+':'')+(cpiChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+
+    // Group 3: Revenue
+    kh+=`<div class="kpi-card green${selIdx===4?' kpi-selected':''}" onclick="clickExecKpi(4)" style="border-top:3px solid var(--warm)"><div class="kpi-label" style="font-size:0.62rem">NET FUNDRAISING</div><div class="kpi-value">${fmtK(df25)}</div><div class="kpi-change ${df25>df24?'up':'down'}">${dfChg!=null?((df25>df24?'\u25b2':'\u25bc')+' '+(dfChg>0?'+':'')+(dfChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    kh+=`<div class="kpi-card warm${selIdx===5?' kpi-selected':''}" onclick="clickExecKpi(5)" style="border-top:3px solid var(--warm)"><div class="kpi-label" style="font-size:0.62rem">OPERATING EXPENSES</div><div class="kpi-value">${fmtK(opex25)}</div><div class="kpi-change ${exp25>exp24?'up':'down'}">${expGr!=null?((exp25>exp24?'\u25b2':'\u25bc')+' '+(expGr>0?'+':'')+(expGr*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+
+    $('#exec-kpis').innerHTML=kh;
+
+    if(window._lastExecIdx==null)window._lastExecIdx=0;
+    renderExecChart(window._lastExecIdx);
+  }
 
   // ===== DETAILED FINANCIALS =====
   // Use filtered area for detailed financials
@@ -559,244 +754,150 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
   // Area badges
 
 
-  // Cash Balance Summary — large single-area format
+  // ===== CASH FLOW STATEMENT =====
   {
-    const ar=a;
-    const p=D.pnl_by_area[ar];
-    const eq=D.equity[ar]||0;
-    const ni=p[18]['2025']||0;
-    const startCash=eq-ni;
-    const gross=p[8]['2025']||0;
-    const cogs=p[9]['2025']||0;
-    const netFundraising=gross-cogs;
-    const opx=p[16]['2025']||0;
-    const rs=D.rev_sharing['2025'][ar]||0;
-    const niCol=ni>=0?'var(--green)':'var(--rose)';
+    const dP=D.pnl_by_area[a];
+    const aEq=D.equity[a]||0;
+    const aNi=dP[18]['2025']||0;
+    const startCash=aEq-aNi;
+    const rsp23=D.rev_sharing['2023'][a]||0,rsp24=D.rev_sharing['2024'][a]||0,rsp25=D.rev_sharing['2025'][a]||0;
 
-    const cashRows=[
-      {l:'Starting Cash (1/1/2025)',v:fmtK(startCash),col:'var(--text)',bold:true},
-      {l:'Net Fundraising',v:fmtK(netFundraising),col:'var(--green)'},
-      {l:'Operating Expenses',v:fmtK(-opx),col:'var(--rose)'},
-      {l:'Revenue Sharing',v:rs?fmtK(rs):'\u2014',col:rs>=0?'var(--green)':'var(--rose)'},
-      {l:'Net Change',v:fmtK(ni),col:niCol,bold:true,sep:true},
-      {l:'Ending Cash (12/31/2025)',v:fmtK(eq),col:'var(--text)',bold:true,big:true},
+    const pctInline=(prev,cur)=>{if(!prev||!cur||prev===0)return'';const cc=(cur-prev)/Math.abs(prev)*100;const col=cc>1?'var(--green)':cc<-1?'var(--rose)':'var(--text-dim)';return cc!==0?' <span style="font-size:0.62rem;font-weight:700;color:'+col+'">'+(cc>0?'+':'')+cc.toFixed(0)+'%</span>':'';};
+    const vc=(v)=>`<td>${fmt(v)}</td>`;
+    const vc25=(v)=>`<td style="border-left:2px solid #d4d8e0;font-weight:700">${fmt(v)}</td>`;
+    const sectionHdr=(label)=>`<tr><td colspan="4" style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">${label}</td></tr>`;
+    const dataRow=(label,r,style)=>`<tr${style?' style="'+style+'"':''}><td>${label}</td>${vc(r['2023'])}<td>${fmt(r['2024'])}${pctInline(r['2023'],r['2024'])}</td><td style="border-left:2px solid #d4d8e0;font-weight:700">${fmt(r['2025'])}${pctInline(r['2024'],r['2025'])}</td></tr>`;
+    const totalRow=(label,v23,v24,v25,style)=>`<tr class="total-row"${style?' style="'+style+'"':''}><td>${label}</td>${vc(v23)}<td>${fmt(v24)}${pctInline(v23,v24)}</td><td style="border-left:2px solid #d4d8e0;font-weight:700">${fmt(v25)}${pctInline(v24,v25)}</td></tr>`;
+
+    const nf23=(dP[8]['2023']||0)-(dP[9]['2023']||0);
+    const nf24=(dP[8]['2024']||0)-(dP[9]['2024']||0);
+    const nf25=(dP[8]['2025']||0)-(dP[9]['2025']||0);
+
+    let h='<table style="width:100%;border-collapse:collapse;table-layout:fixed"><colgroup><col style="width:auto"><col style="width:16%"><col style="width:18%"><col style="width:18%"></colgroup><tbody>';
+
+    // Reverse-engineer cash balances for all 3 years
+    const end25=aEq;
+    const start25=end25-aNi;
+    const ni24y=dP[18]['2024']||0;
+    const end24=start25;
+    const start24=end24-ni24y;
+    const ni23y=dP[18]['2023']||0;
+    const end23=start24;
+    const start23=end23-ni23y;
+
+    // STARTING CASH
+    h+=`<tr style="background:var(--blue-dim)"><td style="font-weight:900;color:var(--blue);padding:0.7rem 0.9rem">STARTING CASH (1/1)</td><td style="text-align:right;font-weight:700;color:var(--blue);padding:0.7rem 0.9rem;opacity:0.55">${fmtK(start23)}</td><td style="text-align:right;font-weight:700;color:var(--blue);padding:0.7rem 0.9rem;opacity:0.7">${fmtK(start24)}</td><td style="text-align:right;font-weight:900;color:var(--blue);padding:0.7rem 0.9rem;border-left:2px solid #d4d8e0">${fmtK(start25)}</td></tr>`;
+
+    // REVENUE HEADER
+    h+=`<tr><td style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Revenue</td><td style="background:var(--surface2);color:var(--accent);font-weight:700;font-size:0.72rem;text-align:right">2023</td><td style="background:var(--surface2);color:var(--accent);font-weight:700;font-size:0.72rem;text-align:right">2024</td><td style="background:var(--surface2);color:var(--accent);font-weight:700;font-size:0.72rem;text-align:right;border-left:2px solid #d4d8e0">2025</td></tr>`;
+    for(let i=0;i<8;i++) h+=dataRow(dP[i].label,dP[i]);
+    h+=totalRow('GROSS REVENUE',dP[8]['2023'],dP[8]['2024'],dP[8]['2025']);
+    h+=dataRow(dP[9].label,dP[9],'background:#fff');
+    h+=totalRow('NET FUNDRAISING',nf23,nf24,nf25);
+
+    // OPERATING EXPENSES
+    h+=sectionHdr('Operating Expenses');
+    for(let i=10;i<=13;i++) h+=dataRow(dP[i].label,dP[i],'padding-left:1.5rem');
+    h+=totalRow(dP[14].label,dP[14]['2023'],dP[14]['2024'],dP[14]['2025'],'padding-left:1.5rem');
+    h+=totalRow(dP[15].label,dP[15]['2023'],dP[15]['2024'],dP[15]['2025'],'padding-left:1.5rem');
+
+    const gfe23=(dP[17]['2023']||0)-(dP[18]['2023']||0)-(rsp23||0);
+    const gfe24=(dP[17]['2024']||0)-(dP[18]['2024']||0)-(rsp24||0);
+    const gfe25=(dP[17]['2025']||0)-(dP[18]['2025']||0)-(rsp25||0);
+    if(gfe23||gfe24||gfe25){
+      h+=totalRow('TOTAL GROWTH FUND EXPENSES',gfe23,gfe24,gfe25,'padding-left:1.5rem');
+    }
+
+    const totOpex23=(dP[16]['2023']||0)+gfe23,totOpex24=(dP[16]['2024']||0)+gfe24,totOpex25=(dP[16]['2025']||0)+gfe25;
+    h+=totalRow('TOTAL OPERATING EXPENSES',totOpex23,totOpex24,totOpex25);
+
+    const noi23=nf23-totOpex23,noi24=nf24-totOpex24,noi25=nf25-totOpex25;
+    h+=totalRow('NET OPERATING INCOME',noi23,noi24,noi25);
+
+    if(rsp23||rsp24||rsp25||a!=='All Areas'){
+      h+=dataRow('Revenue Sharing (Net Transfers)',{'2023':rsp23,'2024':rsp24,'2025':rsp25});
+    }
+
+    // NET INCOME = NET CASH CHANGE
+    h+=totalRow('NET INCOME / CASH CHANGE',dP[18]['2023'],dP[18]['2024'],dP[18]['2025'],'background:var(--green-dim)');
+
+    // ENDING CASH
+    h+=`<tr style="background:var(--blue-dim)"><td style="font-weight:900;color:var(--blue);padding:0.7rem 0.9rem">ENDING CASH (12/31)</td><td style="text-align:right;font-weight:700;color:var(--blue);padding:0.7rem 0.9rem;opacity:0.55">${fmtK(end23)}</td><td style="text-align:right;font-weight:700;color:var(--blue);padding:0.7rem 0.9rem;opacity:0.7">${fmtK(end24)}</td><td style="text-align:right;font-weight:900;color:var(--blue);padding:0.7rem 0.9rem;border-left:2px solid #d4d8e0">${fmtK(end25)}</td></tr>`;
+
+    h+='</tbody></table>';
+    if($('#cashflow-content'))$('#cashflow-content').innerHTML=h;
+  }
+
+  // ===== REVENUE DETAIL — clickable KPIs =====
+  {
+    const dP=D.pnl_by_area[a];
+    const g25=dP[8]['2025']||0,g24=dP[8]['2024']||0;
+    const fc25=dP[9]['2025']||0,fc24=dP[9]['2024']||0;
+    const n25=g25-fc25,n24=g24-fc24;
+    const roi25=fc25>0?g25/fc25:0,roi24=fc24>0?g24/fc24:0;
+    const ars25=D.rev_sharing['2025'][a]||0,ars24=D.rev_sharing['2024'][a]||0;
+    const totalShared25=D.field_areas.reduce((s,ar)=>{const v=D.rev_sharing['2025'][ar]||0;return v>0?s+v:s},0);
+    const totalShared24=D.field_areas.reduce((s,ar)=>{const v=D.rev_sharing['2024'][ar]||0;return v>0?s+v:s},0);
+
+    window._revMetrics=[
+      {l:'Gross / Costs / Net',k:'waterfall',bc:'d'},
+      {l:'Fundraising ROI',k:'roi',bc:'c'},
+      {l:'Revenue Sharing',k:'sharing',bc:'d'},
+      {l:'Revenue Sources',k:'sources',bc:'a'},
     ];
 
-    let ct='';
-    cashRows.forEach(r=>{
-      const sepStyle=r.sep?'border-top:2px solid var(--border);padding-top:1rem;margin-top:0.5rem':'';
-      const bigStyle=r.big?'font-size:1.4rem':'font-size:1.1rem';
-      ct+=`<div style="display:flex;justify-content:space-between;align-items:baseline;padding:0.8rem 0;${sepStyle};border-bottom:1px solid var(--surface2)">`;
-      ct+=`<div><div style="font-size:0.9rem;font-weight:${r.bold?800:600};color:var(--text)">${r.l}</div>`;
-      if(r.sub)ct+=`<div style="font-size:0.72rem;color:var(--text-dim);margin-top:0.1rem">${r.sub}</div>`;
-      ct+=`</div>`;
-      ct+=`<div style="${bigStyle};font-weight:900;color:${r.col}">${r.v}</div>`;
-      ct+=`</div>`;
-    });
+    const isAllAreas=a==='All Areas';
+    const rsDisplay=isAllAreas?totalShared25:ars25;
+    const rsDisplay24=isAllAreas?totalShared24:ars24;
+    const rsSub=isAllAreas?'Shared with local sites':ars25>0?'Receiving support':ars25<0?'Contributing to others':'';
 
-    $('#cash-table').innerHTML=ct;
+    const revKpis=[
+      {l:'Net Fundraising',v:fmtK(n25),c:yoy(n24,n25),cl:'green',sub:fmtK(g25)+' gross \u2212 '+fmtK(fc25)+' costs'},
+      {l:'Fundraising ROI',v:roi25>0?roi25.toFixed(0)+'x':'\u2014',c:yoy(roi24,roi25),cl:'blue'},
+      {l:'Revenue Sharing',v:rsDisplay?fmtK(rsDisplay):'\u2014',c:yoy(rsDisplay24,rsDisplay),cl:isAllAreas?'accent':ars25>=0?'green':'rose',sub:rsSub},
+      {l:'Revenue Mix',v:(()=>{const srcs=(D.rev_sources['2025'][a]||[]);const top=srcs.length?srcs.sort((a,b)=>b.value-a.value)[0]:null;const topPct=top&&g25>0?(top.value/g25*100).toFixed(0)+'%':'';return top?topPct+' '+top.label:'\u2014'})(),cl:'',sub:((D.rev_sources['2025'][a]||[]).length||0)+' revenue streams'},
+    ];
+
+    const rkEl=$('#rev-kpis');
+    if(rkEl){let rh='';revKpis.forEach((k,i)=>{const dir=k.c>0.01?'up':k.c<-0.01?'down':'flat';
+    rh+='<div class="kpi-card '+(k.cl||'')+(i===0?' kpi-selected':'')+'" onclick="clickRevKpi('+i+')"><div class="kpi-label">'+k.l+'</div><div class="kpi-value">'+k.v+'</div><div class="kpi-change '+dir+'">'+(k.c!=null?((dir==='up'?'\u25b2':dir==='down'?'\u25bc':'\u2014')+' '+(k.c>0?'+':'')+(k.c*100).toFixed(1)+'% vs 2024'):(k.sub||''))+'</div></div>'});rkEl.innerHTML=rh;}
+    if($('#rev-detail-content'))renderRevContent(window._lastRevIdx||0);
   }
 
-  // Revenue Sources chart
-  const allSrc=new Set();
-  [2023,2024,2025].forEach(y=>(D.rev_sources[y][a]||[]).forEach(s=>allSrc.add(s.label)));
-  const srcLabels=[...allSrc];
-  const getVal=(yr,lbl)=>(D.rev_sources[yr][a]||[]).find(s=>s.label===lbl)?.value||0;
-  const srcMaxAll=Math.max(...srcLabels.map(l=>Math.max(getVal('2023',l),getVal('2024',l),getVal('2025',l))));
-  h='';
-  srcLabels.sort((x,y)=>getVal('2025',y)-getVal('2025',x)).forEach(l=>{
-    h+=`<div style="margin-bottom:1rem"><div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:0.3rem">${l}</div>`;
-    [['2023','a'],['2024','b'],['2025','d']].forEach(([yr,c])=>{
-      const v=getVal(yr,l);
-      h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.15rem"><span style="font-size:0.68rem;color:var(--text-dim);width:28px">${yr}</span><div class="bar-track" style="flex:1;height:14px"><div class="bar-fill ${c}" style="width:${srcMaxAll?v/srcMaxAll*100:0}%"></div></div><span style="font-size:0.72rem;min-width:50px;text-align:right">${fmtK(v)}</span></div>`;
-    });
-    h+=`</div>`;
-  });
-  if($('#rev-bars'))$('#rev-bars').innerHTML=h||'<p style="color:var(--text-dim)">No revenue data.</p>';
-
-  // Revenue Sharing row (if applicable for this area)
+  // ===== EXPENSE DETAIL — clickable KPIs =====
   {
-    const rs23=D.rev_sharing['2023'][a]||0,rs24=D.rev_sharing['2024'][a]||0,rs25=D.rev_sharing['2025'][a]||0;
-    if(rs23||rs24||rs25){
-      const rsMax=Math.max(Math.abs(rs23),Math.abs(rs24),Math.abs(rs25),srcMaxAll);
-      let rh=`<div style="margin-bottom:1rem;margin-top:0.5rem;padding-top:0.8rem;border-top:1px solid var(--border)"><div style="font-size:0.78rem;font-weight:700;color:var(--accent);margin-bottom:0.3rem">Revenue Sharing (Net Transfers)</div>`;
-      [['2023',rs23,'a'],['2024',rs24,'b'],['2025',rs25,'d']].forEach(([yr,v,c])=>{
-        const col=v>=0?'var(--green)':'var(--rose)';
-        const w=srcMaxAll>0?Math.abs(v)/srcMaxAll*100:0;
-        rh+=`<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.15rem"><span style="font-size:0.68rem;color:var(--text-dim);width:28px">${yr}</span><div class="bar-track" style="flex:1;height:14px"><div style="width:${w}%;height:100%;background:${col};border-radius:4px;opacity:${c==='a'?0.4:c==='b'?0.6:1}"></div></div><span style="font-size:0.72rem;min-width:50px;text-align:right;color:${col}">${v?fmtK(v):'\u2014'}</span></div>`;
-      });
-      rh+=`</div>`;
-      if($('#rev-bars'))$('#rev-bars').innerHTML+= rh;
-    }
+    const dP=D.pnl_by_area[a];
+    const prog25=dP[14]['2025']||0,prog24=dP[14]['2024']||0;
+    const adm25=dP[15]['2025']||0,adm24=dP[15]['2024']||0;
+    const fc25=dP[9]['2025']||0,fc24=dP[9]['2024']||0;
+    const totExp25=(dP[16]['2025']||0)+fc25,totExp24=(dP[16]['2024']||0)+fc24;
+    const progPct=totExp25>0?(prog25/totExp25*100).toFixed(0)+'%':'';
+    const admPct=totExp25>0?(adm25/totExp25*100).toFixed(0)+'%':'';
+
+    window._expMetrics=[
+      {l:'Program Costs',k:'program',bc:'e'},
+      {l:'Admin Costs',k:'admin',bc:'b'},
+      {l:'Fundraising Costs',k:'fundraising',bc:'d'},
+      {l:'Total Expenses',k:'total',bc:'c'},
+    ];
+
+    const expKpis=[
+      {l:'Program Costs',v:fmtK(prog25),c:yoy(prog24,prog25),cl:'rose',inv:1,sub:progPct+' of total'},
+      {l:'Admin Costs',v:fmtK(adm25),c:yoy(adm24,adm25),cl:'warm',inv:1,sub:admPct+' of total'},
+      {l:'Fundraising Costs',v:fmtK(fc25),c:yoy(fc24,fc25),cl:'',inv:1},
+      {l:'Total Expenses',v:fmtK(totExp25),c:yoy(totExp24,totExp25),cl:'blue',inv:1},
+    ];
+
+    const ekEl=$('#exp-kpis');
+    if(ekEl){let eh='';expKpis.forEach((k,i)=>{const dir=k.inv?(k.c>0.01?'down':k.c<-0.01?'up':'flat'):(k.c>0.01?'up':k.c<-0.01?'down':'flat');
+    eh+='<div class="kpi-card '+(k.cl||'')+(i===0?' kpi-selected':'')+'" onclick="clickExpKpi('+i+')"><div class="kpi-label">'+k.l+'</div><div class="kpi-value">'+k.v+'</div><div class="kpi-change '+dir+'">'+(k.c!=null?((dir==='up'?'\u25b2':dir==='down'?'\u25bc':'\u2014')+' '+(k.c>0?'+':'')+(k.c*100).toFixed(1)+'% vs 2024'):(k.sub||''))+'</div></div>'});ekEl.innerHTML=eh;}
+    if($('#exp-detail-content'))renderExpContent(window._lastExpIdx||0);
   }
 
-  // Revenue sharing values (needed by both expense detail and activity statement)
-  const rs_pnl=D.rev_sharing;
-  const rsp23=rs_pnl['2023'][a]||0,rsp24=rs_pnl['2024'][a]||0,rsp25=rs_pnl['2025'][a]||0;
 
-  // Expense Detail — categories with % of total, YoY, expandable children
-  h='';
-  const gfePre23=(dfPnl[17]['2023']||0)-(dfPnl[18]['2023']||0)-(rsp23||0);
-  const gfePre24=(dfPnl[17]['2024']||0)-(dfPnl[18]['2024']||0)-(rsp24||0);
-  const gfePre25=(dfPnl[17]['2025']||0)-(dfPnl[18]['2025']||0)-(rsp25||0);
-  const totAll23=(dfPnl[16]['2023']||0)+(dfPnl[9]['2023']||0)+gfePre23;
-  const totAll24=(dfPnl[16]['2024']||0)+(dfPnl[9]['2024']||0)+gfePre24;
-  const totAll25=(dfPnl[16]['2025']||0)+(dfPnl[9]['2025']||0)+gfePre25;
 
-  const expYoy=(v23,v24,v25)=>{
-    let s='<div style="display:flex;gap:0.6rem;font-size:0.75rem;margin-top:0.2rem;flex-wrap:wrap">';
-    const c1=yoy(v23,v24),c2=yoy(v24,v25);
-    s+=`<span style="color:var(--text-dim)">2023: <strong style="color:var(--text)">${fmtK(v23)}</strong></span>`;
-    if(c1!=null){const col=c1>0?'var(--rose)':'var(--green)';s+=`<span style="color:${col};font-weight:800">${(c1>=0?'+':'')+(c1*100).toFixed(0)}% \u2192</span>`;}
-    s+=`<span style="color:var(--text-dim)">2024: <strong style="color:var(--text)">${fmtK(v24)}</strong></span>`;
-    if(c2!=null){const col=c2>0?'var(--rose)':'var(--green)';s+=`<span style="color:${col};font-weight:800">${(c2>=0?'+':'')+(c2*100).toFixed(0)}% \u2192</span>`;}
-    s+=`<span style="color:var(--text-dim)">2025: <strong style="color:var(--text)">${fmtK(v25)}</strong></span>`;
-    s+='</div>';
-    return s;
-  };
-
-  const expSection=(label,v23,v24,v25,children,color,id)=>{
-    const c2=yoy(v24,v25);
-    const pctCol=c2!=null?(c2>0?'var(--rose)':'var(--green)'):'var(--text-dim)';
-    const pctTxt=c2!=null?(c2>=0?'+':'')+(c2*100).toFixed(0)+'%':'';
-    const share25=totAll25>0?(v25/totAll25*100):0;
-    const share24=totAll24>0?(v24/totAll24*100):0;
-    const hasKids=children.length>0;
-
-    // Header row
-    h+=`<div style="margin-bottom:1.4rem">`;
-    h+=`<div class="exp-row parent"${hasKids?' onclick="document.getElementById(\'exp-'+id+'\').classList.toggle(\'open\');this.classList.toggle(\'expanded\')"':''}>`;
-    h+=`<div style="display:flex;align-items:center">${hasKids?'<span class="exp-toggle">&#9654;</span>':''}<span style="font-size:1rem;color:${color};font-weight:800">${label}</span></div>`;
-    h+=`<div style="text-align:right"><span style="font-size:1.15rem;font-weight:900">${fmtK(v25)}</span> <span style="font-size:0.75rem;color:${pctCol};font-weight:700">${pctTxt}</span></div>`;
-    h+=`</div>`;
-
-    // % of total bar
-    h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin:0.3rem 0">`;
-    h+=`<div class="bar-track" style="flex:1;height:14px"><div style="width:${share25}%;height:100%;background:${color};border-radius:4px;opacity:0.8"></div></div>`;
-    h+=`<span style="font-size:0.72rem;font-weight:700;color:${color};min-width:60px">${share25.toFixed(0)}% of total</span>`;
-    h+=`</div>`;
-
-    // YoY comparison
-    h+=expYoy(v23,v24,v25);
-
-    // Expandable children
-    if(hasKids){
-      h+=`<div class="exp-children" id="exp-${id}" style="margin-top:0.5rem">`;
-      children.forEach(ch=>{
-        const chPct=v25>0?(ch.v25/v25*100):0;
-        const chC=yoy(ch.v24,ch.v25);
-        const chCol=chC!=null?(chC>0?'var(--rose)':'var(--green)'):'var(--text-dim)';
-        const chPctTxt=chC!=null?(chC>=0?'+':'')+(chC*100).toFixed(0)+'%':'';
-        h+=`<div class="exp-row child" style="padding:0.5rem 0 0.2rem 1.5rem">`;
-        h+=`<div><span style="font-weight:700">${ch.l}</span> <span style="font-size:0.68rem;color:var(--text-dim)">${chPct.toFixed(0)}% of category</span></div>`;
-        h+=`<div style="text-align:right"><span style="font-weight:700">${fmtK(ch.v25)}</span> <span style="font-size:0.72rem;color:${chCol};font-weight:700">${chPctTxt}</span></div>`;
-        h+=`</div>`;
-        h+=`<div style="padding-left:1.5rem;padding-bottom:0.5rem">${expYoy(ch.v23,ch.v24,ch.v25)}</div>`;
-      });
-      h+=`</div>`;
-    }
-    h+=`</div>`;
-  };
-
-  // Program Costs
-  expSection('Program Costs',dfPnl[14]['2023'],dfPnl[14]['2024'],dfPnl[14]['2025'],[
-    {l:'Program Staffing',v23:dfPnl[10]['2023'],v24:dfPnl[10]['2024'],v25:dfPnl[10]['2025']},
-    {l:'Community Engagement',v23:dfPnl[11]['2023'],v24:dfPnl[11]['2024'],v25:dfPnl[11]['2025']},
-    {l:'Family Support',v23:dfPnl[12]['2023'],v24:dfPnl[12]['2024'],v25:dfPnl[12]['2025']},
-    {l:'Program Meetings',v23:dfPnl[13]['2023'],v24:dfPnl[13]['2024'],v25:dfPnl[13]['2025']},
-  ],'var(--rose)','prog');
-
-  // Admin Costs
-  expSection('Admin Costs',dfPnl[15]['2023'],dfPnl[15]['2024'],dfPnl[15]['2025'],[],'rgba(190,60,60,0.7)','admin');
-
-  // Fundraising Costs
-  expSection('Fundraising Costs',dfPnl[9]['2023'],dfPnl[9]['2024'],dfPnl[9]['2025'],[],'var(--warm)','cogs');
-
-  // Growth Fund Expenses
-  if(gfePre23||gfePre24||gfePre25){
-    expSection('Growth Fund Expenses',gfePre23,gfePre24,gfePre25,[],'var(--accent)','gfe');
-  }
-
-  // Total
-  h+=`<div style="padding:1rem 0;border-top:2px solid var(--border);margin-top:0.5rem">`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:baseline">`;
-  h+=`<div style="font-size:1.1rem;font-weight:900">TOTAL ALL EXPENSES</div>`;
-  h+=`<div style="font-size:1.25rem;font-weight:900">${fmtK(totAll25)}</div></div>`;
-  h+=expYoy(totAll23,totAll24,totAll25);
-  h+=`</div>`;
-
-  if($('#exp-breakdown'))$('#exp-breakdown').innerHTML=h;
-
-  // Statement of Activity — restructured
-  const nf23=(dfPnl[8]['2023']||0)-(dfPnl[9]['2023']||0);
-  const nf24=(dfPnl[8]['2024']||0)-(dfPnl[9]['2024']||0);
-  const nf25=(dfPnl[8]['2025']||0)-(dfPnl[9]['2025']||0);
-
-  const vc=(v,neg)=>`<td class="${neg&&v<0?'neg':''}">${fmt(v)}</td>`;
-  const arw=(prev,cur)=>{if(!prev||!cur)return'<td class="arw"></td>';const c=prev?((cur-prev)/Math.abs(prev)*100):0;const col=c>1?'var(--green)':c<-1?'var(--rose)':'var(--text-dim)';return`<td class="arw" style="color:${col}">${c!=0?(c>0?'+':'')+c.toFixed(0)+'%':''} \u2192</td>`;};
-  const sectionHdr=(label)=>`<tr><td colspan="6" style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">${label}</td></tr>`;
-  const dataRow=(label,r,style)=>`<tr${style?' style="'+style+'"':''}><td>${label}</td>${vc(r['2023'])}${arw(r['2023'],r['2024'])}${vc(r['2024'])}${arw(r['2024'],r['2025'])}${vc(r['2025'],1)}</tr>`;
-  const totalRow=(label,v23,v24,v25,style)=>`<tr class="total-row"${style?' style="'+style+'"':''}><td>${label}</td>${vc(v23)}${arw(v23,v24)}${vc(v24)}${arw(v24,v25)}${vc(v25,1)}</tr>`;
-
-  h='<tbody>';
-
-  // REVENUE
-  h+=`<tr><td style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Revenue</td><td style="background:var(--surface2);color:var(--accent);font-weight:700;font-size:0.72rem;text-align:right">2023</td><td style="background:var(--surface2)"></td><td style="background:var(--surface2);color:var(--accent);font-weight:700;font-size:0.72rem;text-align:right">2024</td><td style="background:var(--surface2)"></td><td style="background:var(--surface2);color:var(--accent);font-weight:700;font-size:0.72rem;text-align:right">2025</td></tr>`;
-  for(let i=0;i<8;i++) h+=dataRow(dfPnl[i].label,dfPnl[i]);
-  h+=totalRow('GROSS REVENUE',dfPnl[8]['2023'],dfPnl[8]['2024'],dfPnl[8]['2025']);
-
-  // FUNDRAISING COSTS (no header, white bg like program/admin)
-  h+=dataRow(dfPnl[9].label,dfPnl[9],'background:#fff');
-  h+=totalRow('NET FUNDRAISING',nf23,nf24,nf25);
-
-  // OPERATING EXPENSES
-  h+=sectionHdr('Operating Expenses');
-
-  // Program costs
-  for(let i=10;i<=13;i++) h+=dataRow(dfPnl[i].label,dfPnl[i],'padding-left:1.5rem');
-  h+=`<tr style="padding-left:1.5rem;font-weight:900"><td>${dfPnl[14].label}</td>${vc(dfPnl[14]['2023'])}${arw(dfPnl[14]['2023'],dfPnl[14]['2024'])}${vc(dfPnl[14]['2024'])}${arw(dfPnl[14]['2024'],dfPnl[14]['2025'])}${vc(dfPnl[14]['2025'],1)}</tr>`;
-
-  // Admin costs
-  h+=`<tr style="padding-left:1.5rem;font-weight:900"><td>${dfPnl[15].label}</td>${vc(dfPnl[15]['2023'])}${arw(dfPnl[15]['2023'],dfPnl[15]['2024'])}${vc(dfPnl[15]['2024'])}${arw(dfPnl[15]['2024'],dfPnl[15]['2025'])}${vc(dfPnl[15]['2025'],1)}</tr>`;
-
-  // Growth Fund Expenses (as third operating expense bucket)
-  const gfe23=(dfPnl[17]['2023']||0)-(dfPnl[18]['2023']||0)-(rsp23||0);
-  const gfe24=(dfPnl[17]['2024']||0)-(dfPnl[18]['2024']||0)-(rsp24||0);
-  const gfe25=(dfPnl[17]['2025']||0)-(dfPnl[18]['2025']||0)-(rsp25||0);
-  if(gfe23||gfe24||gfe25){
-    h+=`<tr style="padding-left:1.5rem;font-weight:900"><td>TOTAL GROWTH FUND EXPENSES</td>${vc(gfe23)}${arw(gfe23,gfe24)}${vc(gfe24)}${arw(gfe24,gfe25)}${vc(gfe25,1)}</tr>`;
-  }
-
-  // Total Operating Expenses (now includes growth fund)
-  const totOpex23=(dfPnl[16]['2023']||0)+gfe23;
-  const totOpex24=(dfPnl[16]['2024']||0)+gfe24;
-  const totOpex25=(dfPnl[16]['2025']||0)+gfe25;
-  h+=totalRow('TOTAL OPERATING EXPENSES',totOpex23,totOpex24,totOpex25);
-
-  // Net Operating Income (recalculated)
-  const noi23=nf23-totOpex23;
-  const noi24=nf24-totOpex24;
-  const noi25=nf25-totOpex25;
-  h+=totalRow('NET OPERATING INCOME',noi23,noi24,noi25);
-
-  // Revenue Sharing
-  if(rsp23||rsp24||rsp25||a!=='All Areas'){
-    h+=dataRow('Revenue Sharing (Net Transfers)',{'2023':rsp23,'2024':rsp24,'2025':rsp25});
-  }
-
-  // Net Income
-  h+=totalRow('NET INCOME',dfPnl[18]['2023'],dfPnl[18]['2024'],dfPnl[18]['2025'],'background:var(--green-dim)');
-
-  h+='</tbody>';
-  $('#pnl-table').innerHTML=h;
 
   // ===== IMPACT OVERVIEW =====
-  const mv23=(D.mission_v2||{})['2023']||{};
-  const mv24=(D.mission_v2||{})['2024']||{};
-  const mv25=(D.mission_v2||{})['2025']||{};
-  const mAll23=mv23['All Areas']||{};
-  const mAll24=mv24['All Areas']||{};
-  const mAll25=mv25['All Areas']||{};
   const ti25s=mAll25.total_intake||0,to25s=mAll25.total_opened||0,tm25s=mAll25.total_matched||0;
   const compAreas=D.field_areas.filter(ar=>ar!=='WI Statewide'&&ar!=='Chippewa Valley');
 
@@ -804,38 +905,49 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
 
   // Helper for area comparison bars
   const missionExplainers={
-    'avg_families':{shown:'Average number of families actively receiving services in a typical month.',insight:'This metric shows the active caseload — how many families your team and volunteers are walking alongside in a typical month.'},
-    'avg_individuals':{shown:'Adults and children actively receiving support each month.',insight:'This connects caseload to human impact — every individual represents a life being stabilized.'},
-    'unique_families':{shown:'Total distinct families served this year, whether they started in January or were matched in December.',insight:'This metric shows total annual reach — every distinct family that received services this year.'},
-    'total_matched':{shown:'New families matched with volunteers and actively served for the first time this year.',insight:'This metric shows how many new families were matched with volunteers and began receiving support this year.'},
-    'total_graduations':{shown:'Families who completed the program and moved into independence.',insight:'This metric shows program completions — families who graduated to independence and stability.'},
-    'total_hosted':{shown:'Total nights and days children spent in safe, loving host homes.',insight:'This is the heart of Safe Families — every hosted night is a child kept out of the foster system.'},
-    'dec_volunteers':{shown:'All approved volunteers in the system as of year-end, including those between assignments.',insight:'This metric shows the total approved volunteer base — your full bench of people ready to serve.'},
-    'avg_active_volunteers':{shown:'Volunteers actively engaged in hosting, mentoring, or supporting a family in a given month.',insight:'The gap between total and active volunteers is your reserve capacity — people ready to step in when needed.'},
-    'dec_partner_churches':{shown:'Churches actively partnering with Safe Families as of year-end.',insight:'This metric shows the church network powering volunteer recruitment and community support across each area.'},
-    'total_service_hours':{shown:'Total volunteer hours contributed across all areas this year.',insight:'This metric shows the collective time volunteers invested — hours that would cost millions to replace with paid staff.'},
+    'avg_families':{shown:'Monthly average of families with an active case during 2025.',insight:'This metric shows the active caseload — how many families your team and volunteers are walking alongside in a typical month.'},
+    'avg_individuals':{shown:'Monthly average of all individuals in families with an active case.',insight:'This connects caseload to human impact — every individual represents a life being stabilized.'},
+    'unique_families':{shown:'Count of distinct families with any active service period during the year.',insight:'This metric shows total annual reach — every distinct family that received services this year.'},
+    'total_matched':{shown:'Families newly matched during 2025, not including carryover cases from prior years.',insight:'New families matched with volunteers for the first time in 2025.'},
+    'total_graduations':{shown:'Count of individuals whose cases were closed as graduated/transitioned during the year.',insight:'This metric shows program completions — families who graduated to independence and stability.'},
+    'total_hosted':{shown:'Sum of all hosting days and hosting nights across all areas.',insight:'This is the heart of Safe Families — every hosted night is a child kept out of the foster system.'},
+    'dec_volunteers':{shown:'Year-end count of all volunteers with active approved status.',insight:'This metric shows the total approved volunteer base — your full bench of people ready to serve.'},
+    'avg_active_volunteers':{shown:'Monthly average of volunteers with at least one active assignment.',insight:'The gap between total and active volunteers is your reserve capacity — people ready to step in when needed.'},
+    'dec_partner_churches':{shown:'Year-end count of churches with active partnership status.',insight:'Total partner churches as of December 2025.'},
+    'total_service_hours':{shown:'Sum of all logged volunteer hours across all areas and assignment types.',insight:'This metric shows the collective time volunteers invested — hours that would cost millions to replace with paid staff.'},
     'avg_relationships':{shown:'All active volunteer-family connections in a typical month — hosting, friendships, and coaching combined.',insight:'This metric shows all active volunteer-family connections — hosting, friendships, and coaching combined.'},
-    'avg_hosting':{shown:'Volunteers providing temporary safe housing for children each month.',insight:'This metric shows volunteers providing temporary safe housing for children — the most intensive and impactful relationship type.'},
-    'avg_friendships':{shown:'Volunteers walking alongside families as consistent, relational friends each month.',insight:'This metric shows volunteers walking alongside families as consistent, relational friends — the foundation of trust.'},
-    'avg_coaching':{shown:'Trained volunteers providing structured guidance on parenting, finances, or life skills.',insight:'Coaching gives families the tools to thrive independently — it\'s the bridge from crisis to long-term stability.'},
-    'total_intake':{shown:'Every new referral received across all areas this year.',insight:'This metric shows total new referrals — the front door of the program and a measure of community awareness.'},
-    'total_opened':{shown:'Referrals assessed as a good fit for Safe Families services.',insight:'This metric shows how many referrals were assessed as a good fit — families where Safe Families can meaningfully help.'},
+    'avg_hosting':{shown:'Monthly average of volunteers actively hosting children.',insight:'This metric shows volunteers providing temporary safe housing for children — the most intensive and impactful relationship type.'},
+    'avg_friendships':{shown:'Monthly average of active friendship-type volunteer assignments.',insight:'This metric shows volunteers walking alongside families as consistent, relational friends — the foundation of trust.'},
+    'avg_coaching':{shown:'Monthly average of active coaching-type volunteer assignments.',insight:'Coaching gives families the tools to thrive independently — it\'s the bridge from crisis to long-term stability.'},
+    'total_intake':{shown:'Count of all new intake referrals across all areas.',insight:'This metric shows total new referrals — the front door of the program and a measure of community awareness.'},
+    'total_opened':{shown:'Referrals that were opened after assessment as appropriate for services.',insight:'This metric shows how many referrals were assessed as a good fit — families where Safe Families can meaningfully help.'},
   };
-  window.renderAreaBars=(metric,label,el,dec)=>{
+  window.renderAreaBars=(metric,label,el,dec,bc,kpiColor)=>{
     let h='';
+    const bcToColor={'d':'var(--green)','c':'var(--blue)','b':'var(--warm)','e':'var(--rose)','a':'var(--accent)'};
+    const eCol=bcToColor[bc]||'var(--green)';
     if(missionExplainers[metric]){
       const mx=missionExplainers[metric];
-      h+=`<div style="margin-bottom:1.4rem;line-height:1.6"><div style="font-size:0.88rem;font-weight:800;color:var(--green);margin-bottom:0.4rem">${mx.insight}</div><div style="font-size:0.8rem;color:var(--text);opacity:0.65"><strong style="opacity:1;color:var(--text-muted)">How It\u2019s Calculated:</strong> ${mx.shown}</div></div>`;
+      h+=`<div style="margin-bottom:1.4rem;line-height:1.6"><div style="font-size:0.88rem;font-weight:800;color:${eCol};margin-bottom:0.4rem">${mx.insight}</div><div style="font-size:0.8rem;color:var(--text);opacity:0.65"><strong style="opacity:1;color:var(--text-muted)">How It\u2019s Calculated:</strong> ${mx.shown}</div></div>`;
     }
-    const maxV=Math.max(...compAreas.map(ar=>(mv25[ar]||{})[metric]||0));
-    [...compAreas].sort((x,y)=>((mv25[y]||{})[metric]||0)-((mv25[x]||{})[metric]||0)).forEach(ar=>{
-      const v5=(mv25[ar]||{})[metric]||0;
-      const v4=(mv24[ar]||{})[metric]||0;
-      const c=yoy(v4,v5);
-      const chgCol=c!=null?(c>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
-      const chgTxt=c!=null?' <span style="color:'+chgCol+';font-size:0.65rem;font-weight:700">'+(c>=0?'+':'')+(c*100).toFixed(0)+'%</span>':'';
-      const display=dec?v5.toFixed(1):fmtN(Math.round(v5));
-      h+=`<div class="bar-group"><div class="bar-label"><span>${ar}${chgTxt}</span><span>${display}</span></div><div class="bar-track"><div class="bar-fill d" style="width:${maxV>0?v5/maxV*100:0}%"></div></div></div>`;
+    const getMVal=(ar,yr)=>((D.mission_v2||{})[yr]||{})[ar]?.[metric]||0;
+    const maxV=Math.max(...compAreas.map(ar=>Math.max(getMVal(ar,'2025'),getMVal(ar,'2024'))));
+    [...compAreas].sort((x,y)=>getMVal(y,'2025')-getMVal(x,'2025')).forEach(ar=>{
+      const v5=getMVal(ar,'2025');
+      const v4=getMVal(ar,'2024');
+      const c2=yoy(v4,v5);
+      const col2=c2!=null?(c2>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+      const pct2=c2!=null?(c2>=0?'+':'')+(c2*100).toFixed(0)+'%':'';
+      const fmt5=dec?v5.toFixed(1):fmtN(Math.round(v5));
+      const fmt4=dec?v4.toFixed(1):fmtN(Math.round(v4));
+      const w5=maxV>0?v5/maxV*100:0;
+      const w4=maxV>0?v4/maxV*100:0;
+
+      h+=`<div style="margin-bottom:1.8rem">`;
+      h+=`<div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+      h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${bc||'d'}" style="width:${w5}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:100px;text-align:left;padding-left:0.5rem">${fmt5}${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      if(v4)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${bc||'d'}" style="width:${w4}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${fmt4}</span></div>`;
+      h+=`</div>`;
     });
     $(el).innerHTML=h;
   };
@@ -846,50 +958,52 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
   const ratioS=mAll25.ind_fam_ratio||3;
   const newIndS=Math.round(newFamS*ratioS);
   const newInd24S=Math.round(newFam24S*(mAll24.ind_fam_ratio||3));
+  const uniqueInd25=mAll25.unique_individuals||Math.round((mAll25.unique_families||0)*ratioS);
+  const uniqueInd24=mAll24.unique_individuals||Math.round((mAll24.unique_families||0)*(mAll24.ind_fam_ratio||3));
   window._peopleMetrics=[
-    {l:'Avg Monthly Families',k:'avg_families',dec:true},
-    {l:'Avg Monthly Individuals',k:'avg_individuals',dec:true},
-    {l:'Unique Families (Annual)',k:'unique_families',dec:false},
-    {l:'New Families Served',k:'total_matched',dec:false},
-    {l:'Est. New Individuals',k:null,dec:false},
-    {l:'Graduations',k:'total_graduations',dec:false},
-    {l:'Hosted Days+Nights',k:'total_hosted',dec:false},
+    {l:'Unique Families (Annual)',k:'unique_families',dec:false,bc:'d'},
+    {l:'Unique Individuals (Annual)',k:'unique_individuals',dec:false,bc:'c'},
+    {l:'Avg Monthly Families',k:'avg_families',dec:true,bc:'d'},
+    {l:'Avg Monthly Individuals',k:'avg_individuals',dec:true,bc:'c'},
+    {l:'New Families This Year',k:'total_matched',dec:false,bc:'b'},
+    {l:'Est. New Individuals',k:null,dec:false,bc:'d'},
   ];
   renderKpis([
-    {l:'Avg Monthly Families',v:(mAll25.avg_families||0).toFixed(0),c:yoy(mAll24.avg_families,mAll25.avg_families),cl:'',sub:'Active Caseload'},
-    {l:'Avg Monthly Individuals',v:(mAll25.avg_individuals||0).toFixed(0),c:yoy(mAll24.avg_individuals,mAll25.avg_individuals),cl:'blue',sub:'Active Caseload'},
     {l:'Unique Families (Annual)',v:fmtN(mAll25.unique_families),c:yoy(mAll24.unique_families,mAll25.unique_families),cl:'green'},
-    {l:'New Families Served',v:fmtN(newFamS),c:yoy(newFam24S,newFamS),cl:'warm'},
-    {l:'Est. New Individuals Served',v:fmtN(newIndS),c:yoy(newInd24S,newIndS),cl:''},
-    {l:'Graduations',v:fmtN(mAll25.total_graduations),c:yoy(mAll24.total_graduations,mAll25.total_graduations),cl:'rose'},
-    {l:'Hosted Days+Nights',v:fmtN(mAll25.total_hosted),c:yoy(mAll24.total_hosted,mAll25.total_hosted),cl:''},
+    {l:'Unique Individuals (Annual)',v:fmtN(uniqueInd25),c:yoy(uniqueInd24,uniqueInd25),cl:'blue'},
+    {l:'Avg Monthly Families',v:(mAll25.avg_families||0).toFixed(0),c:yoy(mAll24.avg_families,mAll25.avg_families),cl:'green',sub:'Active Caseload'},
+    {l:'Avg Monthly Individuals',v:(mAll25.avg_individuals||0).toFixed(0),c:yoy(mAll24.avg_individuals,mAll25.avg_individuals),cl:'blue',sub:'Active Caseload'},
+    {l:'New Families This Year',v:fmtN(newFamS),c:yoy(newFam24S,newFamS),cl:'warm'},
+    {l:'Est. New Individuals',v:fmtN(newIndS),c:yoy(newInd24S,newIndS),cl:'green'},
   ],'#sm-people-kpis',{onClick:'clickPeopleKpi'});
 
   // People by area (default: first KPI)
-  renderAreaBars('avg_families','Avg Monthly Families','#sm-people-area',true);
+  $('#sm-people-area-title').textContent='Unique Families (Annual) By Area';
+  renderAreaBars('unique_families','Unique Families (Annual)','#sm-people-area',false,'d');
 
   // ── VOLUNTEERING ──
   // ── VOLUNTEERING ──
   window._volMetrics=[
-    {l:'Total Volunteers (Year-End)',k:'dec_volunteers',dec:false},
-    {l:'Avg Active Volunteers/Mo',k:'avg_active_volunteers',dec:true},
-    {l:'Partner Churches (Year-End)',k:'dec_partner_churches',dec:false},
-    {l:'Total Service Hours',k:'total_service_hours',dec:false},
+    {l:'Total Volunteers (Year-End)',k:'dec_volunteers',dec:false,bc:'d'},
+    {l:'Avg Active Volunteers/Mo',k:'avg_active_volunteers',dec:true,bc:'c'},
+    {l:'Partner Churches (Year-End)',k:'dec_partner_churches',dec:false,bc:'b'},
+    {l:'Total Service Hours',k:'total_service_hours',dec:false,bc:'d'},
   ];
   renderKpis([
     {l:'Total Volunteers (Year-End)',v:fmtN(mAll25.dec_volunteers),c:yoy(mAll24.dec_volunteers,mAll25.dec_volunteers),cl:'green'},
     {l:'Avg Active Volunteers/Mo',v:(mAll25.avg_active_volunteers||0).toFixed(0),c:yoy(mAll24.avg_active_volunteers,mAll25.avg_active_volunteers),cl:'blue',sub:mAll25.avg_active_volunteers?'':'New in 2025'},
     {l:'Partner Churches (Year-End)',v:fmtN(mAll25.dec_partner_churches),c:yoy(mAll24.dec_partner_churches,mAll25.dec_partner_churches),cl:'warm'},
-    {l:'Total Service Hours',v:fmtN(mAll25.total_service_hours),c:yoy(mAll24.total_service_hours,mAll25.total_service_hours),cl:''},
+    {l:'Total Service Hours',v:fmtN(mAll25.total_service_hours),c:yoy(mAll24.total_service_hours,mAll25.total_service_hours),cl:'green'},
   ],'#sm-vol-kpis',{onClick:'clickVolKpi'});
-  renderAreaBars('dec_volunteers','Total Volunteers (Year-End)','#sm-vol-area',false);
+  $('#sm-vol-area-title').textContent='Total Volunteers (Year-End) By Area';
+  renderAreaBars('dec_volunteers','Total Volunteers (Year-End)','#sm-vol-area',false,'d');
 
   // ── RELATIONSHIPS ──
   window._relMetrics=[
-    {l:'Total Active Relationships',k:'avg_relationships',dec:true},
-    {l:'Hosting Relationships',k:'avg_hosting',dec:true},
-    {l:'Family Friendships',k:'avg_friendships',dec:true},
-    {l:'Family Coaching',k:'avg_coaching',dec:true},
+    {l:'Total Active Relationships',k:'avg_relationships',dec:true,bc:'d'},
+    {l:'Hosting Relationships',k:'avg_hosting',dec:true,bc:'c'},
+    {l:'Family Friendships',k:'avg_friendships',dec:true,bc:'b'},
+    {l:'Family Coaching',k:'avg_coaching',dec:true,bc:'e'},
   ];
   renderKpis([
     {l:'Total Active Relationships',v:(mAll25.avg_relationships||0).toFixed(0),c:yoy(mAll24.avg_relationships,mAll25.avg_relationships),cl:'green',sub:'Avg Monthly'},
@@ -897,7 +1011,8 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
     {l:'Family Friendships',v:(mAll25.avg_friendships||0).toFixed(0),c:yoy(mAll24.avg_friendships,mAll25.avg_friendships),cl:'warm',sub:'Avg Monthly'},
     {l:'Family Coaching',v:(mAll25.avg_coaching||0).toFixed(0),c:yoy(mAll24.avg_coaching,mAll25.avg_coaching),cl:'rose',sub:'Avg Monthly'},
   ],'#sm-rel-kpis',{onClick:'clickRelKpi'});
-  renderAreaBars('avg_relationships','Total Active Relationships','#sm-rel-area',true);
+  $('#sm-rel-area-title').textContent='Total Active Relationships By Area';
+  renderAreaBars('avg_relationships','Total Active Relationships','#sm-rel-area',true,'d');
 
   // ── INTAKE ──
   const openRateS=to25s>0?(tm25s/to25s):0;
@@ -905,154 +1020,71 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
   const goodFitPctS=ti25s>0?(to25s/ti25s):0;
   const goodFit24S=(mAll24.total_intake||0)>0?((mAll24.total_opened||0)/(mAll24.total_intake||1)):0;
   window._intakeMetrics=[
-    {l:'Total Intakes',k:'total_intake',dec:false},
-    {l:'Good Fit Rate',k:'total_opened',dec:false},
-    {l:'Open Rate',k:'total_matched',dec:false},
+    {l:'Total Intakes',k:'total_intake',dec:false,bc:'d'},
+    {l:'Good Fit Rate',k:'total_opened',dec:false,bc:'d'},
+    {l:'Open Rate',k:'total_matched',dec:false,bc:'d'},
     {l:'Pending Cases',k:null,dec:false},
   ];
   renderKpis([
-    {l:'Total Intakes',v:fmtN(ti25s),c:yoy(mAll24.total_intake,ti25s),cl:''},
+    {l:'Total Intakes',v:fmtN(ti25s),c:yoy(mAll24.total_intake,ti25s),cl:'green'},
     {l:'Good Fit Rate',v:fmtPct(goodFitPctS),c:yoy(goodFit24S,goodFitPctS),cl:goodFitPctS>=0.4?'green':'warm',sub:'Of All Intakes'},
     {l:'Open Rate (Of Good Fit Referrals)',v:fmtPct(openRateS),c:yoy(openRate24S,openRateS),cl:openRateS>=0.7?'green':'warm',sub:'Matched / Good Fits'},
-    {l:'Pending Cases',v:fmtN(mAll25.total_intake-mAll25.total_opened-(mAll25.total_intake-mAll25.total_opened-mAll25.total_matched>0?0:0)),c:null,cl:'',sub:fmtN(ti25s-to25s)+' Not Good Fit \u00b7 '+fmtN(to25s-tm25s)+' Unmatched'},
   ],'#sm-intake-kpis',{onClick:'clickIntakeKpi'});
 
-  // Intake funnel
-  const funnelS=[
-    {l:'Total Intakes',v25:ti25s,v24:mAll24.total_intake||0,pct:null},
-    {l:'Good Fit (Opened)',v25:to25s,v24:mAll24.total_opened||0,pct:goodFitPctS},
-    {l:'Matched (Served)',v25:tm25s,v24:mAll24.total_matched||0,pct:openRateS},
-  ];
-  h='';
-  const fMaxS=Math.max(ti25s,mAll24.total_intake||0);
-  funnelS.forEach((f,i)=>{
-    const c=yoy(f.v24,f.v25);
-    const w=fMaxS>0?f.v25/fMaxS*100:0;
-    const pctLabel=f.pct!=null?' \u2014 '+(f.pct*100).toFixed(0)+'%'+(i===1?' of Intakes':' of Good Fits'):'';
-    const col=i===0?'var(--accent)':i===1?'var(--warm)':'var(--green)';
-    const chgCol=c!=null?(c>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
-    const chgTxt=c!=null?' <span style="color:'+chgCol+';font-size:0.65rem">'+(c>=0?'+':'')+(c*100).toFixed(0)+'%</span>':'';
-    h+=`<div style="margin-bottom:0.5rem">`;
-    h+=`<div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.2rem"><span style="font-weight:700;color:var(--text-muted)">${f.l}${pctLabel}</span><span style="font-weight:700">${fmtN(f.v25)}${chgTxt}</span></div>`;
-    h+=`<div class="bar-track" style="height:16px"><div style="width:${w}%;background:${col};height:100%;border-radius:4px"></div></div>`;
-    h+=`</div>`;
-  });
-  $('#sm-intake-funnel').innerHTML=h;
+
 
   // Intake by area (default: total intakes)
-  renderAreaBars('total_intake','Total Intakes','#sm-intake-area',false);
+  $('#sm-intake-area-title').textContent='Total Intakes By Area';
+  renderAreaBars('total_intake','Total Intakes','#sm-intake-area',false,'d');
 
-  // ===== LOCAL MISSION IMPACT =====
-  const ma24=mv24[a]||{};
-  const ma25=mv25[a]||{};
-  const ma23=(mv23||{})[a]||{};
-  const tiL=ma25.total_intake||0,toL=ma25.total_opened||0,tmL=ma25.total_matched||0;
-  const tiL4=ma24.total_intake||0,toL4=ma24.total_opened||0,tmL4=ma24.total_matched||0;
-
-  // Local KPIs
-  const openRateL=toL>0?(tmL/toL):0;
-  const openRate24L=toL4>0?(tmL4/toL4):0;
-  const newFamL=tmL;
-  const newFam24L=tmL4;
-  const ratioL=ma25.ind_fam_ratio||3;
-  const newIndL=Math.round(newFamL*ratioL);
-  const newInd24L=Math.round(newFam24L*(ma24.ind_fam_ratio||3));
-  const lmKpis=[
-    {l:'Avg Monthly Families',v:(ma25.avg_families||0).toFixed(0),c:yoy(ma24.avg_families,ma25.avg_families),cl:'',sub:'Active Caseload'},
-    {l:'Avg Monthly Individuals',v:(ma25.avg_individuals||0).toFixed(0),c:yoy(ma24.avg_individuals,ma25.avg_individuals),cl:'blue',sub:'Active Caseload'},
-    {l:'Unique Families (Annual)',v:fmtN(ma25.unique_families),c:yoy(ma24.unique_families,ma25.unique_families),cl:'green'},
-    {l:'New Families Served',v:fmtN(newFamL),c:yoy(newFam24L,newFamL),cl:'warm'},
-    {l:'Est. New Individuals Served',v:fmtN(newIndL),c:yoy(newInd24L,newIndL),cl:''},
-    {l:'Open Rate (Of Good Fit Referrals)',v:fmtPct(openRateL),c:yoy(openRate24L,openRateL),cl:openRateL>=0.7?'green':'warm',sub:'Matched / Good Fits'},
-    {l:'Graduations',v:fmtN(ma25.total_graduations),c:yoy(ma24.total_graduations,ma25.total_graduations),cl:'rose'},
+  // ── OUTCOMES ──
+  window._outcomesMetrics=[
+    {l:'Graduations',k:'total_graduations',dec:false,bc:'d'},
+    {l:'Hosted Days+Nights',k:'total_hosted',dec:false,bc:'c'},
+    {l:'Hosted Nights',k:'total_hosted_nights',dec:false,bc:'b'},
+    {l:'Hosted Days',k:'total_hosted_days',dec:false,bc:'d'},
   ];
-  h='';
-  lmKpis.forEach(k=>{
-    const dir=k.c>0.01?'up':k.c<-0.01?'down':'flat';
-    h+=`<div class="kpi-card ${k.cl}"><div class="kpi-label">${k.l}</div><div class="kpi-value">${k.v}</div><div class="kpi-change ${dir}">${k.c!=null?((k.c>0?'\u25b2':k.c<0?'\u25bc':'\u2014')+' '+(k.c>0?'+':'')+(k.c*100).toFixed(1)+'% vs 2024'):(k.sub||'')}</div></div>`;
-  });
-  $('#lm-kpis').innerHTML=h;
+  renderKpis([
+    {l:'Graduations',v:fmtN(mAll25.total_graduations),c:yoy(mAll24.total_graduations,mAll25.total_graduations),cl:'green'},
+    {l:'Hosted Days+Nights',v:fmtN(mAll25.total_hosted),c:yoy(mAll24.total_hosted,mAll25.total_hosted),cl:'blue'},
+    {l:'Hosted Nights',v:fmtN(mAll25.total_hosted_nights),c:yoy(mAll24.total_hosted_nights,mAll25.total_hosted_nights),cl:'warm'},
+    {l:'Hosted Days',v:fmtN(mAll25.total_hosted_days),c:yoy(mAll24.total_hosted_days,mAll25.total_hosted_days),cl:'green'},
+  ],'#sm-outcomes-kpis',{onClick:'clickOutcomesKpi'});
+  $('#sm-outcomes-area-title').textContent='Graduations By Area';
+  renderAreaBars('total_graduations','Graduations','#sm-outcomes-area',false,'d');
 
-  // Local impact bars (3-year where available)
-  const lmBars=[
-    {l:'Avg Monthly Individuals',v23:ma23.avg_individuals||0,v24:ma24.avg_individuals||0,v25:ma25.avg_individuals||0,dec:1},
-    {l:'Avg Monthly Volunteers',v23:ma23.avg_volunteers||0,v24:ma24.avg_volunteers||0,v25:ma25.avg_volunteers||0,dec:1},
-    {l:'Unique Families',v23:0,v24:ma24.unique_families||0,v25:ma25.unique_families||0,no23:1},
-    {l:'Total Intakes',v23:ma23.total_intake||0,v24:ma24.total_intake||0,v25:ma25.total_intake||0},
-    {l:'Graduations',v23:ma23.total_graduations||0,v24:ma24.total_graduations||0,v25:ma25.total_graduations||0},
-    {l:'Hosted Days+Nights',v23:ma23.total_hosted||0,v24:ma24.total_hosted||0,v25:ma25.total_hosted||0},
-  ];
-  h='';
-  const maxLm=Math.max(...lmBars.map(m=>Math.max(m.v23,m.v24,m.v25)));
-  lmBars.forEach(m=>{
-    const c=yoy(m.v24,m.v25);
-    const chgCol=c!=null?(c>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
-    const chgStr=c!=null?' <span style="font-size:0.7rem;color:'+chgCol+';font-weight:700">'+(c>=0?'+':'')+(c*100).toFixed(0)+'%</span>':'';
-    h+=`<div style="margin-bottom:0.8rem"><div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:0.25rem">${m.l}${chgStr}</div>`;
-    const yrs=m.v23>0&&!m.no23?[['2023',m.v23,'a'],['2024',m.v24,'b'],['2025',m.v25,'d']]:[['2024',m.v24,'b'],['2025',m.v25,'d']];
-    yrs.forEach(([yr,v,col])=>{
-      const display=m.dec?v.toFixed(1):fmtN(Math.round(v));
-      h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.12rem"><span style="font-size:0.68rem;color:var(--text-dim);width:28px">${yr}</span><div class="bar-track" style="flex:1;height:14px"><div class="bar-fill ${col}" style="width:${maxLm>0?v/maxLm*100:0}%"></div></div><span style="font-size:0.72rem;min-width:50px;text-align:right">${display}</span></div>`;
+
+  // ===== AREA SUMMARY =====
+  {
+    const ma24=mv24[a]||{};const ma25=mv25[a]||{};
+    const aP=D.pnl_by_area[a];const aEq=D.equity[a]||0;const aNi=aP[18]['2025']||0;
+    const aLf=D.local_fundraising['2025'][a]||0;const aLf24=D.local_fundraising['2024'][a]||0;
+    const aOpex=aP[16]['2025']||0;const aTr=D.target_reserve[a]||0;
+    const aStaff=D.staffing_2026[a]||0;const staffMo=aStaff>0?aEq/(aStaff/12):0;
+    const aEff25=D.efficiency['2025'][a]||{};const aEff24=D.efficiency['2024'][a]||{};
+    let sh='';
+    sh+='<div class="chart-box full" style="margin-bottom:1.2rem"><h3>Financial Snapshot</h3>';
+    sh+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.8rem;margin-bottom:1rem">';
+    [{l:'Net Fundraising',v:fmtK(aLf),c:yoy(aLf24,aLf),cl:'green'},{l:'Operating Expenses',v:fmtK(aOpex),c:yoy(aP[16]['2024']||0,aOpex),cl:'warm'},{l:'Net Income',v:fmtK(aNi),cl:aNi>=0?'green':'rose'},{l:'Cash Reserves',v:fmtK(aEq),cl:'blue',sub:staffMo.toFixed(1)+' mo staffing'}].forEach(k=>{
+      sh+='<div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:0.8rem;border-top:3px solid var(--'+k.cl+')"><div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.2rem">'+k.l+'</div><div style="font-size:1.3rem;font-weight:900">'+k.v+'</div>'+(k.c!=null?'<div style="font-size:0.7rem;color:var(--'+k.cl+')">'+(k.c>0?'+':'')+(k.c*100).toFixed(0)+'% vs 2024</div>':'')+(k.sub?'<div style="font-size:0.68rem;color:var(--text-dim)">'+k.sub+'</div>':'')+'</div>';
     });
-    h+=`</div>`;
-  });
-  $('#lm-bars').innerHTML=h;
-
-  // Local intake funnel
-  const gfL=tiL>0?(toL/tiL):0;
-  const mpL=toL>0?(tmL/toL):0;
-  const funnelL=[
-    {l:'Total Intakes',v25:tiL,v24:tiL4,pct:null},
-    {l:'Good Fit (Opened)',v25:toL,v24:toL4,pct:gfL},
-    {l:'Matched (Served)',v25:tmL,v24:tmL4,pct:mpL},
-  ];
-  h='';
-  const fMaxL=Math.max(tiL,tiL4);
-  funnelL.forEach((f,i)=>{
-    const c=yoy(f.v24,f.v25);
-    const w=fMaxL>0?f.v25/fMaxL*100:0;
-    const pctLabel=f.pct!=null?' \u2014 '+(f.pct*100).toFixed(0)+'%'+(i===1?' of Intakes':' of Good Fits'):'';
-    const col=i===0?'var(--accent)':i===1?'var(--warm)':'var(--green)';
-    const chgCol=c!=null?(c>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
-    const chgTxt=c!=null?' <span style="color:'+chgCol+';font-size:0.65rem">'+(c>=0?'+':'')+(c*100).toFixed(0)+'%</span>':'';
-    h+=`<div style="margin-bottom:0.5rem">`;
-    h+=`<div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.2rem"><span style="font-weight:700;color:var(--text-muted)">${f.l}${pctLabel}</span><span style="font-weight:700">${fmtN(f.v25)}${chgTxt}</span></div>`;
-    h+=`<div class="bar-track" style="height:16px"><div style="width:${w}%;background:${col};height:100%;border-radius:4px"></div></div>`;
-    h+=`</div>`;
-  });
-  $('#lm-funnel').innerHTML=h;
-
-  // Local detail table
-  h='<tbody>';
-  h+='<tr><td colspan="5" style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Annual Unique Totals</td></tr>';
-  [{l:'Unique Families',v4:ma24.unique_families,v5:ma25.unique_families,t:1},
-   {l:'Unique Individuals (Est)',v4:ma24.unique_individuals,v5:ma25.unique_individuals,t:1}].forEach(r=>{
-    const c=yoy(r.v4,r.v5);
-    h+=`<tr class="${r.t?'total-row':''}"><td>${r.l}</td><td>${fmtN(r.v4||0)}</td><td>${fmtN(r.v5||0)}</td><td class="${c>0.05?'pos':c<-0.05?'neg':''}">${c!=null?fmtPct(c):'\u2014'}</td></tr>`;
-  });
-  h+='<tr><td colspan="5" style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Monthly Averages</td></tr>';
-  [{l:'Families Served',v4:ma24.avg_families,v5:ma25.avg_families},
-   {l:'Individuals Served',v4:ma24.avg_individuals,v5:ma25.avg_individuals},
-   {l:'Active Volunteers',v4:ma24.avg_volunteers,v5:ma25.avg_volunteers},
-   {l:'Partner Churches',v4:ma24.avg_partner_churches,v5:ma25.avg_partner_churches},
-   {l:'Active Relationships',v4:ma24.avg_relationships,v5:ma25.avg_relationships}].forEach(r=>{
-    const c=yoy(r.v4,r.v5);
-    h+=`<tr><td>${r.l}</td><td>${(r.v4||0).toFixed(1)}</td><td>${(r.v5||0).toFixed(1)}</td><td class="${c>0.05?'pos':c<-0.05?'neg':''}">${c!=null?fmtPct(c):'\u2014'}</td></tr>`;
-  });
-  h+='<tr><td colspan="5" style="background:var(--surface2);color:var(--accent);font-weight:900;padding:0.5rem 0.9rem;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Annual Cumulative Totals</td></tr>';
-  [{l:'Total Intakes',v4:ma24.total_intake,v5:ma25.total_intake},
-   {l:'Cases Opened (Good Fit)',v4:ma24.total_opened,v5:ma25.total_opened},
-   {l:'Cases Matched',v4:ma24.total_matched,v5:ma25.total_matched},
-   {l:'Graduations',v4:ma24.total_graduations,v5:ma25.total_graduations},
-   {l:'Hosted Days',v4:ma24.total_hosted_days,v5:ma25.total_hosted_days},
-   {l:'Hosted Nights',v4:ma24.total_hosted_nights,v5:ma25.total_hosted_nights},
-   {l:'Total Hosted',v4:ma24.total_hosted,v5:ma25.total_hosted,t:1},
-   {l:'Service Hours',v4:ma24.total_service_hours,v5:ma25.total_service_hours}].forEach(r=>{
-    const c=yoy(r.v4,r.v5);
-    h+=`<tr class="${r.t?'total-row':''}"><td>${r.l}</td><td>${fmtN(r.v4||0)}</td><td>${fmtN(r.v5||0)}</td><td class="${c>0.05?'pos':c<-0.05?'neg':''}">${c!=null?fmtPct(c):'\u2014'}</td></tr>`;
-  });
-  h+='</tbody>';
-  $('#lm-table').innerHTML='<thead><tr><th>Metric</th><th>2024</th><th>2025</th><th>Change</th></tr></thead>'+h;
+    sh+='</div></div>';
+    sh+='<div class="chart-box full" style="margin-bottom:1.2rem"><h3>Mission Impact</h3>';
+    sh+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.8rem;margin-bottom:1rem">';
+    [{l:'Unique Families',v:fmtN(ma25.unique_families),c:yoy(ma24.unique_families,ma25.unique_families),cl:'green'},{l:'Graduations',v:fmtN(ma25.total_graduations),c:yoy(ma24.total_graduations,ma25.total_graduations),cl:'warm'},{l:'Volunteers',v:fmtN(ma25.dec_volunteers),c:yoy(ma24.dec_volunteers,ma25.dec_volunteers),cl:'blue'},{l:'Hosted Days+Nights',v:fmtN(ma25.total_hosted),c:yoy(ma24.total_hosted,ma25.total_hosted),cl:'rose'},{l:'Intakes',v:fmtN(ma25.total_intake),c:yoy(ma24.total_intake,ma25.total_intake),cl:''},{l:'Partner Churches',v:fmtN(ma25.dec_partner_churches),c:yoy(ma24.dec_partner_churches,ma25.dec_partner_churches),cl:'green'}].forEach(k=>{
+      sh+='<div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:0.8rem;border-top:3px solid var(--'+(k.cl||'accent')+')"><div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.2rem">'+k.l+'</div><div style="font-size:1.3rem;font-weight:900">'+k.v+'</div>'+(k.c!=null?'<div style="font-size:0.7rem;color:'+(k.c>0?'var(--green)':'var(--rose)')+'">'+(k.c>0?'+':'')+(k.c*100).toFixed(0)+'% vs 2024</div>':'')+'</div>';
+    });
+    sh+='</div></div>';
+    sh+='<div class="chart-box full"><h3>Cost per Outcome</h3>';
+    sh+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.8rem">';
+    [{l:'Monthly Cost per Family',k:'_custom_fam',f:fmt},{l:'Monthly Cost per Individual',k:'_custom_ind',f:fmt},{l:'_skip',k:'_skip',f:fmt},{l:'Fundraising ROI',k:'fundraising_roi',f:function(v){return v!=null?v.toFixed(1)+'x':'\u2014'}}].forEach(m=>{
+      const v25=aEff25[m.k],v24=aEff24[m.k];
+      const cc=(v24!=null&&v25!=null&&v24!==0)?(v25-v24)/Math.abs(v24):null;
+      sh+='<div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:0.8rem;border-top:3px solid var(--accent)"><div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.2rem">'+m.l+'</div><div style="font-size:1.3rem;font-weight:900">'+m.f(v25)+'</div>'+(cc!=null?'<div style="font-size:0.7rem;color:var(--text-dim)">'+(cc>0?'+':'')+(cc*100).toFixed(0)+'% vs 2024</div>':'')+'</div>';
+    });
+    sh+='</div></div>';
+    $('#lm-summary').innerHTML=sh;
+  }
 
   // ===== OUTLOOK (in overview) =====
   const revGrowth=inc['2025']>0?(b26Rev-inc['2025'])/inc['2025']:null;
@@ -1094,7 +1126,7 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
       const tgtPct=maxVal?Math.min(atr,aeq)/maxVal*100:0;
       const surplusPct=aeq>atr?(maxVal?(aeq-atr)/maxVal*100:0):0;
       const gapPct=aeq<atr?(maxVal?(atr-aeq)/maxVal*100:0):0;
-      h+=`<div class="bar-group"><div class="bar-label"><span>${ar}</span><span>${fmtK(aeq)}</span></div><div class="bar-track"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${tgtPct}%;background:var(--warm)"></div>${surplusPct>0?`<div style="width:${surplusPct}%;background:var(--accent)"></div>`:''}${gapPct>0?`<div style="width:${gapPct}%;background:#e0e0e0"></div>`:''}</div></div></div>`;
+      h+=`<div class="bar-group"><div class="bar-label"><span>${areaLabel(ar)}</span><span>${fmtK(aeq)} <span style="font-size:0.68rem;color:${(()=>{const s=D.staffing_2026[ar]||0;const m=s>0?aeq/(s/12):0;return m>=4.5?'var(--green)':m>=3?'var(--warm)':'var(--rose)'})()};font-weight:700">${(()=>{const s=D.staffing_2026[ar]||0;return s>0?(aeq/(s/12)).toFixed(1)+' mo staffing':'N/A'})()}</span></span></div><div class="bar-track"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${tgtPct}%;background:var(--warm)"></div>${surplusPct>0?`<div style="width:${surplusPct}%;background:var(--accent)"></div>`:''}${gapPct>0?`<div style="width:${gapPct}%;background:#e0e0e0"></div>`:''}</div></div></div>`;
     });
     h+=`<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:var(--warm)"></div>Minimum Target</div><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Growth Funds</div><div class="legend-item"><div class="legend-dot" style="background:#e0e0e0"></div>Gap to Target</div></div>`;
     if($('#out-reserve'))$('#out-reserve').innerHTML=h;
@@ -1165,77 +1197,134 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
     if($('#ov-local-fundraising'))$('#ov-local-fundraising').innerHTML=h;
   }
 
-  if(a==='All Areas'){
-    renderEffAll();
-  } else {
-    renderEffSingle(a);
-  }
+  renderImpactCost();
 }
 
-function renderEffAll(){
-  const fa=D.field_areas;
-  const costKpis=[
-    {t:'Cost per Individual Served',k:'cost_per_individual',f:fmt,lower:1},
-    {t:'Cost per Hosted Day+Night',k:'cost_per_hosted',f:fmt,lower:1},
-    {t:'Cost per Intake',k:'cost_per_intake',f:fmt,lower:1},
-    {t:'Cost per Graduation',k:'cost_per_graduation',f:fmt,lower:1},
-    {t:'Cost per Service Hour',k:'cost_per_service_hour',f:fmt,lower:1},
-    {t:'Program Cost Ratio',k:'program_cost_ratio',f:v=>v!=null?fmtPct(v):'—',lower:1},
+const icGetCost=(ar,yr)=>{
+  const opex=D.pnl_by_area[ar]?.[16]?.[yr]||0;
+  const fam=((D.mission_v2||{})[yr]||{})[ar]?.avg_families||0;
+  const ind=((D.mission_v2||{})[yr]||{})[ar]?.avg_individuals||0;
+  return{fam:fam>0?opex/12/fam:null,ind:ind>0?opex/12/ind:null};
+};
+window._icMetrics=[];
+function renderImpactCost(){
+  const fas=D.field_areas;const e25=D.efficiency['2025'];const e24=D.efficiency['2024'];const aa25=e25['All Areas']||{};const aa24=e24['All Areas']||{};
+  // Uses global icGetCost function
+  const icAll25=icGetCost('All Areas','2025');
+  const icAll24=icGetCost('All Areas','2024');
+
+  const metrics=[
+    {l:'Monthly Cost per Family',k:'fam',cl:'green',lower:1},
+    {l:'Monthly Cost per Individual',k:'ind',cl:'blue',lower:1},
   ];
+  window._icMetrics=metrics.map(m=>({l:m.l,k:m.k,lower:m.lower,mfmt:fmt,mbc:m.cl==='green'?'d':'c'}));
+  const kpis=metrics.map(m=>{
+    const v25=icAll25[m.k],v24=icAll24[m.k];
+    const cc=(v24!=null&&v25!=null&&v24!==0)?(v25-v24)/Math.abs(v24):null;
+    return{l:m.l,v:v25!=null?fmt(Math.round(v25)):'\u2014',c:cc,cl:m.cl,inv:0};
+  });
+  const renderKpisIC=(kpis,el,opts)=>{let h='';kpis.forEach((k,i)=>{const dir=k.inv?(k.c>0.01?'down':k.c<-0.01?'up':'flat'):(k.c>0.01?'up':k.c<-0.01?'down':'flat');const click=opts&&opts.onClick?' onclick="'+opts.onClick+'('+i+')"':'';
+  h+='<div class="kpi-card '+(k.cl||'')+(opts&&opts.onClick&&i===0?' kpi-selected':'')+'"'+click+'><div class="kpi-label">'+k.l+'</div><div class="kpi-value">'+k.v+'</div><div class="kpi-change '+dir+'">'+(k.c!=null?((dir==='up'?'\u25b2':dir==='down'?'\u25bc':'\u2014')+' '+(k.c>0?'+':'')+(k.c*100).toFixed(1)+'% vs 2024'):'')+'</div></div>'});$(el).innerHTML=h};
+  renderKpisIC(kpis,'#ic-kpis',{onClick:'clickIcKpi'});
+  renderIcBars(window._lastIcIdx||0);
+}
+function renderIcBars(idx){
+  const m=window._icMetrics[idx];if(!m)return;
+  const fas=D.field_areas.filter(ar=>ar!=='WI Statewide');
   let h='';
-  costKpis.forEach(kpi=>{
-    h+=`<div class="eff-card"><h4>${kpi.t}</h4>`;
-    [...fa].sort((x,y)=>{const va=D.efficiency['2025'][x]?.[kpi.k],vb=D.efficiency['2025'][y]?.[kpi.k];if(va==null)return 1;if(vb==null)return-1;return kpi.lower?va-vb:vb-va}).forEach(ar=>{
-      const v24=D.efficiency['2024'][ar]?.[kpi.k],v25=D.efficiency['2025'][ar]?.[kpi.k];
-      const chg=(v24!=null&&v25!=null&&v24!==0)?(v25-v24)/Math.abs(v24):null;
-      h+=`<div class="eff-row"><span class="area">${ar}</span><div class="vals"><span class="v24">${kpi.f(v24)}</span><span class="v25">${kpi.f(v25)}</span><span class="chg ${chgCls(chg,kpi.lower)}">${chg!=null?(chg>0?'+':'')+(chg*100).toFixed(0)+'%':'—'}</span></div></div>`;
-    });
-    h+='</div>';
-  });
-  $('#eff-cards').innerHTML=h;
 
-  const revKpis=[
-    {t:'Fundraising ROI',k:'fundraising_roi',f:v=>v!=null?v.toFixed(2)+'x':'—',lower:0},
-    {t:'Revenue per Volunteer',k:'rev_per_volunteer',f:fmt,lower:0},
-    {t:'Admin Ratio',k:'admin_ratio',f:v=>v!=null?fmtPct(v):'—',lower:1},
-    {t:'Intake Conversion',k:'intake_conversion',f:v=>v!=null?fmtPct(v):'—',lower:0},
-  ];
-  h='';
-  revKpis.forEach(kpi=>{
-    h+=`<div class="eff-card"><h4>${kpi.t}</h4>`;
-    [...fa].sort((x,y)=>{const va=D.efficiency['2025'][x]?.[kpi.k],vb=D.efficiency['2025'][y]?.[kpi.k];if(va==null)return 1;if(vb==null)return-1;return kpi.lower?va-vb:vb-va}).forEach(ar=>{
-      const v24=D.efficiency['2024'][ar]?.[kpi.k],v25=D.efficiency['2025'][ar]?.[kpi.k];
-      const chg=(v24!=null&&v25!=null&&v24!==0)?(v25-v24)/Math.abs(v24):null;
-      h+=`<div class="eff-row"><span class="area">${ar}</span><div class="vals"><span class="v24">${kpi.f(v24)}</span><span class="v25">${kpi.f(v25)}</span><span class="chg ${chgCls(chg,kpi.lower)}">${chg!=null?(chg>0?'+':'')+(chg*100).toFixed(0)+'%':'—'}</span></div></div>`;
-    });
-    h+='</div>';
+  const vals=fas.map(ar=>{
+    const c25=icGetCost(ar,'2025');
+    const c24=icGetCost(ar,'2024');
+    return{ar,v25:c25[m.k],v24:c24[m.k]};
+  }).filter(x=>x.v25!=null);
+
+  vals.sort((a,b)=>a.v25-b.v25);
+  const maxV=Math.max(...vals.map(x=>x.v25));
+
+  vals.forEach(({ar,v25,v24})=>{
+    const cc=yoy(v24,v25);
+    const good=cc<0;
+    const chgCol=cc!=null?(good?'var(--green)':'var(--rose)'):'var(--text-dim)';
+    const pct2=cc!=null?(cc>=0?'+':'')+(cc*100).toFixed(0)+'%':'';
+    const w25=maxV>0?v25/maxV*100:0;
+    const w24=v24!=null&&maxV>0?v24/maxV*100:0;
+    const display25=fmt(Math.round(v25));
+    const display24=v24!=null?fmt(Math.round(v24)):'';
+    h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+    h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${m.mbc}" style="width:${w25}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:110px;text-align:left;padding-left:0.5rem">${display25}${pct2?' <span style="color:'+chgCol+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+    if(v24!=null)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.mbc}" style="width:${w24}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:110px;text-align:left;padding-left:0.5rem">${display24}</span></div>`;
+    h+=`</div>`;
   });
-  $('#eff-rev').innerHTML=h;
+
+  $('#ic-area-bars').innerHTML=h;
+  buildViewSelector('#ic-area-title',m.l+' ');
 }
 
-function renderEffSingle(a){
-  const e24=D.efficiency['2024'][a]||{},e25=D.efficiency['2025'][a]||{};
-  const allKpis=[
-    {t:'Cost per Individual Served',k:'cost_per_individual',f:fmt,lower:1},
-    {t:'Cost per Hosted Day+Night',k:'cost_per_hosted',f:fmt,lower:1},
-    {t:'Cost per Intake',k:'cost_per_intake',f:fmt,lower:1},
-    {t:'Cost per Graduation',k:'cost_per_graduation',f:fmt,lower:1},
-    {t:'Cost per Service Hour',k:'cost_per_service_hour',f:fmt,lower:1},
-    {t:'Program Cost Ratio',k:'program_cost_ratio',f:v=>v!=null?fmtPct(v):'—',lower:1},
-    {t:'Fundraising ROI',k:'fundraising_roi',f:v=>v!=null?v.toFixed(2)+'x':'—',lower:0},
-    {t:'Revenue per Volunteer',k:'rev_per_volunteer',f:fmt,lower:0},
-    {t:'Admin Ratio',k:'admin_ratio',f:v=>v!=null?fmtPct(v):'—',lower:1},
-    {t:'Intake Conversion',k:'intake_conversion',f:v=>v!=null?fmtPct(v):'—',lower:0},
-  ];
-  let h='<div class="eff-card" style="grid-column:1/-1"><h4>'+a+' — Efficiency KPIs</h4>';
-  allKpis.forEach(kpi=>{
-    const v24=e24[kpi.k],v25=e25[kpi.k];
-    const chg=(v24!=null&&v25!=null&&v24!==0)?(v25-v24)/Math.abs(v24):null;
-    h+=`<div class="eff-row"><span class="area">${kpi.t}</span><div class="vals"><span class="v24">${kpi.f(v24)}</span><span class="v25">${kpi.f(v25)}</span><span class="chg ${chgCls(chg,kpi.lower)}">${chg!=null?(chg>0?'+':'')+(chg*100).toFixed(0)+'%':'—'}</span></div></div>`;
-  });
-  h+='</div>';
-  $('#eff-cards').innerHTML=h;
-  $('#eff-rev').innerHTML='';
+function clickExecKpi(idx){
+  window._lastExecIdx=idx;
+  // Deselect all exec KPIs, select this one
+  document.querySelectorAll('#exec-kpis .kpi-card').forEach(c=>c.classList.remove('kpi-selected'));
+  document.querySelectorAll('#exec-kpis .kpi-card')[idx].classList.add('kpi-selected');
+  renderExecChart(idx);
+}
+
+function renderExecChart(idx){
+  const m=window._execMetrics[idx];if(!m)return;
+  const fas=D.field_areas.filter(ar=>ar!=='WI Statewide');
+  let h='';
+
+  if(m.type==='mission'){
+    // Use renderAreaBars pattern
+    const getMVal=(ar,yr)=>((D.mission_v2||{})[yr]||{})[ar]?.[m.k]||0;
+    const maxV=Math.max(...fas.map(ar=>Math.max(getMVal(ar,'2025'),getMVal(ar,'2024'))));
+    [...fas].sort((x,y)=>getMVal(y,'2025')-getMVal(x,'2025')).forEach(ar=>{
+      const v5=getMVal(ar,'2025'),v4=getMVal(ar,'2024');
+      const c2=yoy(v4,v5);
+      const col2=c2!=null?(c2>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+      const pct2=c2!=null?(c2>=0?'+':'')+(c2*100).toFixed(0)+'%':'';
+      const fmt5=m.dec?v5.toFixed(1):fmtN(Math.round(v5));
+      const fmt4=m.dec?v4.toFixed(1):fmtN(Math.round(v4));
+      const w5=maxV>0?v5/maxV*100:0,w4=maxV>0?v4/maxV*100:0;
+      h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+      h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${m.bc}" style="width:${w5}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:100px;text-align:left;padding-left:0.5rem">${fmt5}${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      if(v4)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.bc}" style="width:${w4}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${fmt4}</span></div>`;
+      h+=`</div>`;
+    });
+  } else if(m.type==='cost'){
+    const vals=fas.map(ar=>{
+      const c25=icGetCost(ar,'2025'),c24=icGetCost(ar,'2024');
+      return{ar,v25:c25[m.k],v24:c24[m.k]};
+    }).filter(x=>x.v25!=null);
+    vals.sort((a,b)=>a.v25-b.v25);
+    const maxV=Math.max(...vals.map(x=>x.v25));
+    vals.forEach(({ar,v25,v24})=>{
+      const cc=yoy(v24,v25);
+      const chgCol=cc!=null?(cc<0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+      const pct2=cc!=null?(cc>=0?'+':'')+(cc*100).toFixed(0)+'%':'';
+      const w25=maxV>0?v25/maxV*100:0,w24=v24!=null&&maxV>0?v24/maxV*100:0;
+      h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+      h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${m.bc}" style="width:${w25}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:110px;text-align:left;padding-left:0.5rem">${fmt(Math.round(v25))}${pct2?' <span style="color:'+chgCol+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      if(v24!=null)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.bc}" style="width:${w24}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:110px;text-align:left;padding-left:0.5rem">${fmt(Math.round(v24))}</span></div>`;
+      h+=`</div>`;
+    });
+  } else if(m.type==='fin'){
+    // Reuse financial bar renderer
+    renderFinAreaBars(m.k,m.l,'#exec-chart',m.bc);
+    $('#exec-chart-title').textContent=m.l+' By Area';
+    return;
+  }
+
+  $('#exec-chart').innerHTML=h;
+  $('#exec-chart-title').textContent=m.l+' By Area';
+}
+
+function clickIcKpi(idx){
+  window._lastIcIdx=idx;
+  const cards=document.querySelectorAll('#ic-kpis .kpi-card');
+  cards.forEach(c=>c.classList.remove('kpi-selected'));
+  cards[idx].classList.add('kpi-selected');
+  renderIcBars(idx);
 }
 
 function clickDfKpi(idx){
@@ -1252,8 +1341,9 @@ function clickOvKpi(idx){
   cards.forEach(c=>c.classList.remove('kpi-selected'));
   cards[idx].classList.add('kpi-selected');
   const m=window._ovMetrics[idx];
-  $('#ov-area-title').textContent=m.l+' By Area';
-  renderFinAreaBars(m.k,m.l,'#ov-area-bars');
+  window._lastOvIdx=idx;
+  buildViewSelector('#ov-area-title',m.l+' ');
+  renderFinAreaBars(m.k,m.l,'#ov-area-bars',m.bc);
 }
 
 function clickIntakeKpi(idx){
@@ -1262,8 +1352,18 @@ function clickIntakeKpi(idx){
   cards[idx].classList.add('kpi-selected');
   const m=window._intakeMetrics[idx];
   $('#sm-intake-area-title').textContent=m.l+' By Area';
-  if(m.k){renderAreaBars(m.k,m.l,'#sm-intake-area',m.dec);}
+  if(m.k){renderAreaBars(m.k,m.l,'#sm-intake-area',m.dec,m.bc);}
   else{$('#sm-intake-area').innerHTML='<p style="color:var(--text-dim);font-size:0.82rem;padding:1rem 0">Calculated metric \u2014 no per-area breakdown available.</p>';}
+}
+
+
+function clickOutcomesKpi(idx){
+  const cards=document.querySelectorAll('#sm-outcomes-kpis .kpi-card');
+  cards.forEach(c=>c.classList.remove('kpi-selected'));
+  cards[idx].classList.add('kpi-selected');
+  const m=window._outcomesMetrics[idx];
+  $('#sm-outcomes-area-title').textContent=m.l+' By Area';
+  if(m.k){renderAreaBars(m.k,m.l,'#sm-outcomes-area',m.dec,m.bc);}
 }
 
 function clickPeopleKpi(idx){
@@ -1272,7 +1372,7 @@ function clickPeopleKpi(idx){
   cards[idx].classList.add('kpi-selected');
   const m=window._peopleMetrics[idx];
   $('#sm-people-area-title').textContent=m.l+' By Area';
-  if(m.k){renderAreaBars(m.k,m.l,'#sm-people-area',m.dec);}
+  if(m.k){renderAreaBars(m.k,m.l,'#sm-people-area',m.dec,m.bc);}
   else{$('#sm-people-area').innerHTML='<p style="color:var(--text-dim);font-size:0.82rem;padding:1rem 0">Estimated metric \u2014 no per-area breakdown available.</p>';}
 }
 
@@ -1282,7 +1382,7 @@ function clickRelKpi(idx){
   cards[idx].classList.add('kpi-selected');
   const m=window._relMetrics[idx];
   $('#sm-rel-area-title').textContent=m.l+' By Area';
-  if(m.k){renderAreaBars(m.k,m.l,'#sm-rel-area',m.dec);}
+  if(m.k){renderAreaBars(m.k,m.l,'#sm-rel-area',m.dec,m.bc);}
 }
 
 function clickVolKpi(idx){
@@ -1291,7 +1391,122 @@ function clickVolKpi(idx){
   cards[idx].classList.add('kpi-selected');
   const m=window._volMetrics[idx];
   $('#sm-vol-area-title').textContent=m.l+' By Area';
-  if(m.k){renderAreaBars(m.k,m.l,'#sm-vol-area',m.dec);}
+  if(m.k){renderAreaBars(m.k,m.l,'#sm-vol-area',m.dec,m.bc);}
+}
+
+
+function clickRevKpi(idx){
+  window._lastRevIdx=idx;
+  document.querySelectorAll('#rev-kpis .kpi-card').forEach(c=>c.classList.remove('kpi-selected'));
+  document.querySelectorAll('#rev-kpis .kpi-card')[idx].classList.add('kpi-selected');
+  renderRevContent(idx);
+}
+
+function renderRevContent(idx){
+  const a=area;const dP=D.pnl_by_area;const fas=D.field_areas;let h='';const m=window._revMetrics[idx];
+
+  const get3yr=(ar,fn)=>[fn(ar,'2023'),fn(ar,'2024'),fn(ar,'2025')];
+
+  if(m.k==='waterfall'){
+    // Waterfall stays as-is (not by-area)
+    const dp=dP[a];
+    const maxW=Math.max(dp[8]['2023']||0,dp[8]['2024']||0,dp[8]['2025']||0);
+    [['2025',1,22],['2024',0.5,8],['2023',0.3,8]].forEach(([yr,op,ht])=>{
+      const g=dp[8][yr]||0,cc=dp[9][yr]||0,n=g-cc;
+      const gW=maxW>0?g/maxW*100:0,nPct=g>0?n/g*100:0,cPct=g>0?cc/g*100:0;
+      h+=`<div style="margin-bottom:0.6rem"><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:0.15rem"><span style="font-weight:700">${yr}</span><span style="color:var(--text-dim)">${fmtK(g)} gross \u2192 ${fmtK(cc)} costs \u2192 <strong style="color:var(--green)">${fmtK(n)} net</strong></span></div><div class="bar-track" style="height:${ht}px"><div style="display:flex;height:100%;width:${gW}%;border-radius:4px;overflow:hidden;opacity:${op}"><div style="width:${nPct}%;background:var(--green)"></div><div style="width:${cPct}%;background:var(--warm)"></div></div></div></div>`;
+    });
+    h+=`<div class="legend" style="margin-top:0.4rem"><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Net</div><div class="legend-item"><div class="legend-dot" style="background:var(--warm)"></div>Costs</div></div>`;
+    buildViewSelector('#rev-area-title','Gross \u2192 Costs \u2192 Net Fundraising ');
+  } else if(m.k==='roi'){
+    const getROI=(ar,yr)=>{const p=dP[ar];const g=p[8][yr]||0;const cc=p[9][yr]||0;return cc>0?g/cc:0};
+    const vals=fas.map(ar=>({ar,v25:getROI(ar,'2025'),v24:getROI(ar,'2024'),v23:getROI(ar,'2023')})).filter(x=>x.v25>0);
+    vals.sort((a,b)=>b.v25-a.v25);
+    const maxV=Math.max(...vals.map(x=>Math.max(x.v25,x.v24,x.v23)));
+    vals.forEach(({ar,v25,v24,v23})=>{
+      const c2=yoy(v24,v25),c1=yoy(v23,v24);
+      const col2=c2!=null?(c2>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+      const col1=c1!=null?(c1>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+      const pct2=c2!=null?(c2>=0?'+':'')+(c2*100).toFixed(0)+'%':'';
+      const pct1=c1!=null?(c1>=0?'+':'')+(c1*100).toFixed(0)+'%':'';
+      h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+      h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${m.bc||'c'}" style="width:${maxV>0?v25/maxV*100:0}%"></div></div><span style="font-size:0.85rem;font-weight:900;min-width:100px;text-align:left;padding-left:0.5rem">${v25.toFixed(0)}x${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+      if(v24)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.bc||'c'}" style="width:${maxV>0?v24/maxV*100:0}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${v24.toFixed(0)}x${pct1?' <span style="color:'+col1+';font-weight:800">'+pct1+'</span>':''}</span></div>`;
+      if(v23)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.35rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2023</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.bc||'c'}" style="width:${maxV>0?v23/maxV*100:0}%;opacity:0.3"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${v23.toFixed(0)}x</span></div>`;
+      h+=`</div>`;
+    });
+    buildViewSelector('#rev-area-title','Fundraising ROI ');
+  } else if(m.k==='sharing'){
+    const getRS=(ar,yr)=>D.rev_sharing[yr][ar]||0;
+    const rsVals=fas.map(ar=>({ar,v25:getRS(ar,'2025'),v24:getRS(ar,'2024'),v23:getRS(ar,'2023')})).filter(x=>x.v25!==0||x.v24!==0);
+    if(rsVals.length){
+      rsVals.sort((a,b)=>b.v25-a.v25);
+      const maxRS=Math.max(...rsVals.map(x=>Math.max(Math.abs(x.v25),Math.abs(x.v24),Math.abs(x.v23))));
+      rsVals.forEach(({ar,v25,v24,v23})=>{
+        const col25=v25>=0?'var(--green)':'var(--rose)';
+        const col24=v24>=0?'var(--green)':'var(--rose)';
+        const col23=v23>=0?'var(--green)':'var(--rose)';
+        h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+        h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div style="width:${maxRS>0?Math.abs(v25)/maxRS*100:0}%;height:100%;background:${col25};border-radius:4px"></div></div><span style="font-size:0.85rem;font-weight:900;min-width:100px;text-align:left;padding-left:0.5rem;color:${col25}">${v25?fmtK(v25):'\u2014'}</span></div>`;
+        if(v24)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div style="width:${maxRS>0?Math.abs(v24)/maxRS*100:0}%;height:100%;background:${col24};border-radius:4px;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${fmtK(v24)}</span></div>`;
+        if(v23)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.35rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2023</span><div class="bar-track" style="flex:1;height:8px"><div style="width:${maxRS>0?Math.abs(v23)/maxRS*100:0}%;height:100%;background:${col23};border-radius:4px;opacity:0.3"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:100px;text-align:left;padding-left:0.5rem">${fmtK(v23)}</span></div>`;
+        h+=`</div>`;
+      });
+    } else {h+='<p style="color:var(--text-dim);padding:1rem 0">No revenue sharing activity.</p>';}
+    buildViewSelector('#rev-area-title','Revenue Sharing ');
+  } else if(m.k==='sources'){
+    const srcs25=(D.rev_sources['2025'][a]||[]).slice().sort((a,b)=>b.value-a.value);
+    const rs25v=D.rev_sharing['2025'][a]||0;
+    const grossRev=D.pnl_by_area[a][8]['2025']||0;
+    const totalWithRS=grossRev+(rs25v>0?rs25v:0);
+    const items=srcs25.map(s=>({l:s.label,v:s.value,pct:totalWithRS>0?(s.value/totalWithRS*100):0}));
+    if(rs25v>0)items.push({l:'Revenue Sharing (Received)',v:rs25v,pct:totalWithRS>0?(rs25v/totalWithRS*100):0,isRS:true});
+    items.sort((a,b)=>b.v-a.v);
+    const maxPct=Math.max(...items.map(x=>x.pct));
+    items.forEach(it=>{
+      const w=maxPct>0?it.pct/maxPct*100:0;
+      const col=it.isRS?'var(--accent)':'var(--green)';
+      h+=`<div style="margin-bottom:0.8rem"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.2rem"><span style="font-size:0.82rem;font-weight:700;${it.isRS?'color:var(--accent)':''}">${it.l}</span><span style="font-size:0.82rem;font-weight:800">${it.pct.toFixed(0)}% <span style="font-size:0.72rem;color:var(--text-dim);font-weight:600">${fmtK(it.v)}</span></span></div>`;
+      h+=`<div class="bar-track" style="height:14px"><div style="width:${w}%;height:100%;background:${col};border-radius:4px;opacity:${it.isRS?0.7:0.8}"></div></div></div>`;
+    });
+    buildViewSelector('#rev-area-title','Revenue Mix ');
+  }
+  $('#rev-detail-content').innerHTML=h;
+}
+
+function clickExpKpi(idx){
+  window._lastExpIdx=idx;
+  document.querySelectorAll('#exp-kpis .kpi-card').forEach(c=>c.classList.remove('kpi-selected'));
+  document.querySelectorAll('#exp-kpis .kpi-card')[idx].classList.add('kpi-selected');
+  renderExpContent(idx);
+}
+
+function renderExpContent(idx){
+  const a=area;const fas=D.field_areas;let h='';const m=window._expMetrics[idx];
+  const getExpYr=(ar,k,yr)=>{const p=D.pnl_by_area[ar];if(k==='program')return p[14][yr]||0;if(k==='admin')return p[15][yr]||0;if(k==='fundraising')return p[9][yr]||0;if(k==='total')return(p[16][yr]||0)+(p[9][yr]||0);return 0};
+  if(m.k==='admin'){h+=`<div style="margin-bottom:1rem;font-size:0.85rem;font-weight:800;color:var(--warm)">Statewide Support absorbs the majority of admin costs \u2014 covering finance, HR, and operations that serve all areas.</div>`}
+  const vals=fas.map(ar=>({ar,v25:getExpYr(ar,m.k,'2025'),v24:getExpYr(ar,m.k,'2024'),v23:getExpYr(ar,m.k,'2023')}));
+  vals.sort((a,b)=>b.v25-a.v25);
+  const maxV=Math.max(...vals.map(x=>Math.max(x.v25,x.v24,x.v23)));
+  vals.forEach(({ar,v25,v24,v23})=>{
+    const c2=yoy(v24,v25),c1=yoy(v23,v24);
+    const isExp=true;
+    const col2=c2!=null?(c2<0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+    const col1=c1!=null?(c1<0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+    const pct2=c2!=null?(c2>=0?'+':'')+(c2*100).toFixed(0)+'%':'';
+    const pct1=c1!=null?(c1>=0?'+':'')+(c1*100).toFixed(0)+'%':'';
+    const aTotal=getExpYr(ar,  'total','2025');
+    const pctOfTotal=aTotal>0?(v25/aTotal*100).toFixed(0)+'%':'';
+    const w25=maxV>0?v25/maxV*100:0;
+    const w24=maxV>0?v24/maxV*100:0;
+    const w23=maxV>0?v23/maxV*100:0;
+    h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+    h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${m.bc||'b'}" style="width:${w25}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:120px;text-align:left;padding-left:0.5rem">${fmtK(v25)}${pctOfTotal?' <span style="font-size:0.65rem;color:var(--text-dim)">'+pctOfTotal+'</span>':''}${pct2?' <span style="color:'+col2+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+    if(v24)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.bc||'b'}" style="width:${w24}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:120px;text-align:left;padding-left:0.5rem">${fmtK(v24)}${pct1?' <span style="color:'+col1+';font-weight:800">'+pct1+'</span>':''}</span></div>`;
+    if(v23)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.35rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2023</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.bc||'b'}" style="width:${w23}%;opacity:0.3"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:120px;text-align:left;padding-left:0.5rem">${fmtK(v23)}</span></div>`;
+    h+=`</div>`;
+  });
+  $('#exp-detail-content').innerHTML=h;buildViewSelector('#exp-area-title',m.l+' ');
 }
 
 function switchDF(btn){
@@ -1307,6 +1522,20 @@ function switchSM(btn){
   document.querySelectorAll('.sm-sub').forEach(s=>s.classList.remove('active'));
   $('#sm-'+btn.dataset.sm).classList.add('active');
 }
+
+
+function shareLmLink(){
+  const url=new URL(window.location.href);
+  url.searchParams.set('area',area);url.searchParams.set('tab','local-mission');
+  navigator.clipboard.writeText(url.toString()).then(()=>{
+    const btn=$('#lm-share-btn');btn.textContent='Link Copied!';btn.style.background='var(--green)';
+    setTimeout(()=>{btn.textContent='Copy Share Link';btn.style.background='var(--accent)'},2000);
+  });
+}
+try{const params=new URLSearchParams(window.location.search);
+if(params.get('area')){area=params.get('area');}
+if(params.get('tab')){setTimeout(()=>{const btn=document.querySelector('.nav-btn[data-s="'+params.get('tab')+'"]');if(btn)btn.click()},100);}
+}catch(e){}
 
 render();
 </script>
