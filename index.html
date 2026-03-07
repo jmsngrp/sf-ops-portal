@@ -195,7 +195,7 @@ try{
 <div style="padding:2rem 0 1rem;text-align:center;background:#fff"><h1 style="font-size:1.8rem;font-weight:300;color:var(--text);letter-spacing:0.02em;margin:0">Safe Families for Children <span style="color:var(--accent)">WI</span></h1></div>
 <div class="filter-bar"><div class="filter-inner">
   <div class="nav-group">
-    <button class="nav-btn active" data-s="exec">Executive Summary</button>
+    <button class="nav-btn active" data-s="exec">Highlights</button>
     <button class="nav-btn" data-s="state-mission">Impact</button>
     <button class="nav-btn" data-s="pnl">Financials</button>
     <button class="nav-btn" data-s="impact-cost">Impact Cost</button>
@@ -208,7 +208,7 @@ try{
 
 <main class="main">
 <div class="section" id="exec">
-  <h2 class="section-title">Executive Summary <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">Year-End 2025</span></h2>
+  <h2 class="section-title">Highlights <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">Year-End 2025</span></h2>
   <div id="exec-content"></div>
   <div class="kpi-grid" id="exec-kpis" style="margin-top:0"></div>
   <div class="chart-box full" style="margin-top:1.2rem" id="exec-chart-box">
@@ -551,6 +551,48 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
         h+=`<div class="bar-group"><div class="bar-label"><span>${areaLabel(ar)}</span><span>${fmtK(aeq)} <span style="font-size:0.68rem;color:${(()=>{const s=D.staffing_2026[ar]||0;const m=s>0?aeq/(s/12):0;return m>=4.5?'var(--green)':m>=3?'var(--warm)':'var(--rose)'})()};font-weight:700">${(()=>{const s=D.staffing_2026[ar]||0;return s>0?(aeq/(s/12)).toFixed(1)+' mo staffing':'N/A'})()}</span></span></div><div class="bar-track"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${tgtW}%;background:var(--warm)"></div>${growthW>0?`<div style="width:${growthW}%;background:var(--accent)"></div>`:''}${gapW>0?`<div style="width:${gapW}%;background:#e0e0e0"></div>`:''}</div></div></div>`;
       });
       h+=`<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:var(--warm)"></div>Minimum Target</div><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Growth Funds</div></div>`;
+      $(el).innerHTML=h;
+      return;
+    }
+    // Special case: fundraising margin shows gross revenue bar with net fundraising fill
+    if(metricKey==='net_margin'){
+      const maxGross=Math.max(...fas.map(ar=>{
+        if(ar==='__local_grouped__'){return D.field_areas.filter(x=>x!=='WI Statewide').reduce((s,x)=>s+(D.pnl_by_area[x][8]['2025']||0),0);}
+        return D.pnl_by_area[ar][8]['2025']||0;
+      }));
+      [...fas].sort((x,y)=>{
+        const gx=x==='__local_grouped__'?D.field_areas.filter(a=>a!=='WI Statewide').reduce((s,a)=>s+(D.pnl_by_area[a][8]['2025']||0),0):(D.pnl_by_area[x][8]['2025']||0);
+        const gy=y==='__local_grouped__'?D.field_areas.filter(a=>a!=='WI Statewide').reduce((s,a)=>s+(D.pnl_by_area[a][8]['2025']||0),0):(D.pnl_by_area[y][8]['2025']||0);
+        return gy-gx;
+      }).forEach(ar=>{
+        const getYr=(a,yr)=>{
+          if(a==='__local_grouped__'){
+            const locals=D.field_areas.filter(x=>x!=='WI Statewide');
+            const g=locals.reduce((s,x)=>s+(D.pnl_by_area[x][8][yr]||0),0);
+            const n=locals.reduce((s,x)=>s+(D.local_fundraising[yr][x]||0),0);
+            return{gross:g,net:n,margin:g>0?n/g*100:0};
+          }
+          const g=D.pnl_by_area[a][8][yr]||0;
+          const n=D.local_fundraising[yr][a]||0;
+          return{gross:g,net:n,margin:g>0?n/g*100:0};
+        };
+        const d25=getYr(ar,'2025'),d24=getYr(ar,'2024');
+        const mChg=yoy(d24.margin/100,d25.margin/100);
+        const mCol=mChg!=null?(mChg>0?'var(--green)':'var(--rose)'):'var(--text-dim)';
+        const mPct=mChg!=null?(mChg>=0?'+':'')+(mChg*100).toFixed(0)+'%':'';
+        const grossW=maxGross>0?d25.gross/maxGross*100:0;
+        const netPct=d25.gross>0?d25.net/d25.gross*100:0;
+
+        h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
+        // 2025: gross as full bar track, net as fill portion
+        h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${grossW}%;background:var(--green);opacity:0.2;border-radius:4px"></div><div style="position:absolute;left:0;top:0;height:100%;width:${grossW*netPct/100}%;background:var(--green);border-radius:4px"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:140px;text-align:left;padding-left:0.5rem">${d25.margin.toFixed(0)}% <span style="font-size:0.68rem;color:var(--text-dim)">${fmtK(d25.net)} of ${fmtK(d25.gross)}</span>${mPct?' <span style="color:'+mCol+';font-weight:800;font-size:0.72rem">'+mPct+'</span>':''}</span></div>`;
+        // 2024
+        const grossW24=maxGross>0?d24.gross/maxGross*100:0;
+        const netPct24=d24.gross>0?d24.net/d24.gross*100:0;
+        if(d24.gross)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px;position:relative"><div style="position:absolute;left:0;top:0;height:100%;width:${grossW24}%;background:var(--green);opacity:0.1;border-radius:4px"></div><div style="position:absolute;left:0;top:0;height:100%;width:${grossW24*netPct24/100}%;background:var(--green);opacity:0.5;border-radius:4px"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:140px;text-align:left;padding-left:0.5rem">${d24.margin.toFixed(0)}% <span style="font-size:0.62rem">${fmtK(d24.net)} of ${fmtK(d24.gross)}</span></span></div>`;
+        h+=`</div>`;
+      });
+      h+=`<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Net Fundraising</div><div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:0.2"></div>Gross Revenue</div></div>`;
       $(el).innerHTML=h;
       return;
     }
