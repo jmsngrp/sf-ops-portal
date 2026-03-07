@@ -56,7 +56,7 @@ body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);line-h
 .sm-tab:hover{color:var(--text);background:var(--accent-dim)}
 .sm-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .kpi-card.kpi-selected{outline:none;box-shadow:0 4px 20px rgba(0,0,0,0.15),0 1px 4px rgba(0,0,0,0.1);transform:translateY(-3px);background:#fff;border:2px solid var(--accent);border-top-width:3px}
-.kpi-card.warm.kpi-selected{border-color:var(--warm)}.kpi-card.rose.kpi-selected{border-color:var(--rose)}.kpi-card.blue.kpi-selected{border-color:var(--blue)}.kpi-card.green.kpi-selected{border-color:var(--green)}
+.kpi-card.warm.kpi-selected{border-color:var(--warm)}.kpi-card.rose.kpi-selected{border-color:var(--rose)}.kpi-card.blue.kpi-selected{border-color:var(--blue)}.kpi-card.green.kpi-selected{border-color:var(--green)}.kpi-card.accent.kpi-selected{border-color:var(--accent)}
 .kpi-card[onclick]{cursor:pointer;transition:all 0.15s;opacity:0.7}
 .kpi-card[onclick]:hover{opacity:0.85;transform:translateY(-1px)}
 .kpi-card[onclick].kpi-selected{opacity:1}
@@ -65,11 +65,11 @@ body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--text);line-h
 /* KPI */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:0.8rem;margin-bottom:1.5rem}
 .kpi-card{background:#fff;border:1px solid #e8eaed;border-radius:var(--radius);padding:1rem 1.2rem;box-shadow:0 2px 12px rgba(0,0,0,0.06),0 1px 4px rgba(0,0,0,0.04);border-top:3px solid var(--accent)}
-.kpi-card.warm{border-top-color:var(--warm)}.kpi-card.rose{border-top-color:var(--rose)}.kpi-card.blue{border-top-color:var(--blue)}.kpi-card.green{border-top-color:var(--green)}
+.kpi-card.warm{border-top-color:var(--warm)}.kpi-card.rose{border-top-color:var(--rose)}.kpi-card.blue{border-top-color:var(--blue)}.kpi-card.green{border-top-color:var(--green)}.kpi-card.accent{border-top-color:var(--accent)}
 .kpi-label{font-size:0.72rem;letter-spacing:0.04em;color:var(--text-dim);margin-bottom:0.3rem;font-weight:700;text-transform:uppercase}
 .kpi-value{font-size:1.6rem;font-weight:900;color:var(--text)}
 .kpi-change{font-size:0.75rem;margin-top:0.2rem;font-weight:700;color:var(--accent)}
-.kpi-card.warm .kpi-change{color:var(--warm)}.kpi-card.rose .kpi-change{color:var(--rose)}.kpi-card.blue .kpi-change{color:var(--blue)}.kpi-card.green .kpi-change{color:var(--green)}
+.kpi-card.warm .kpi-change{color:var(--warm)}.kpi-card.rose .kpi-change{color:var(--rose)}.kpi-card.blue .kpi-change{color:var(--blue)}.kpi-card.green .kpi-change{color:var(--green)}.kpi-card.accent .kpi-change{color:var(--accent)}
 
 /* Tables */
 .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:1.5rem;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,0.04)}
@@ -207,7 +207,7 @@ try{
 </div></div>
 
 <main class="main">
-<div class="section" id="exec">
+<div class="section active" id="exec">
   <h2 class="section-title">Highlights <span style="font-size:0.75rem;font-weight:600;color:var(--accent);margin-left:0.5rem">Year-End 2025</span></h2>
   <div id="exec-content"></div>
   <div class="kpi-grid" id="exec-kpis" style="margin-top:0"></div>
@@ -611,8 +611,8 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
       return 0;
     };
     const maxV=Math.max(...fas.map(ar=>Math.max(Math.abs(getFinVal(ar,metricKey)),Math.abs(getFinVal24(ar,metricKey)),Math.abs(getFinVal23(ar,metricKey)))));
-    // Special case: net_income uses center-zero diverging bars
-    if(metricKey==='net_income'){
+    // Special case: net_income and rev_sharing use center-zero diverging bars
+    if(metricKey==='net_income'||metricKey==='rev_sharing'){
       const maxAbs=Math.max(...fas.map(ar=>Math.max(Math.abs(getFinVal(ar,metricKey)),Math.abs(getFinVal24(ar,metricKey)),Math.abs(getFinVal23(ar,metricKey)))));
 
       const divBar=(v,h_px,op)=>{
@@ -752,10 +752,10 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
 
     window._execMetrics=[
       {l:'Avg Families / Mo',k:'avg_families',dec:true,bc:'d',type:'mission'},
-      {l:'Avg Individuals / Mo',k:'avg_individuals',dec:true,bc:'c',type:'mission'},
-      {l:'Monthly Cost / Family',k:'fam',bc:'d',type:'cost'},
-      {l:'Monthly Cost / Individual',k:'ind',bc:'c',type:'cost'},
-      {l:'Net Fundraising',k:'direct_fundraising',bc:'d',type:'fin'},
+      {l:'Avg Individuals / Mo',k:'avg_individuals',dec:true,bc:'d',type:'mission'},
+      {l:'Monthly Cost / Family',k:'fam',bc:'a',type:'cost'},
+      {l:'Monthly Cost / Individual',k:'ind',bc:'a',type:'cost'},
+      {l:'Net Fundraising',k:'direct_fundraising',bc:'b',type:'fin'},
       {l:'Operating Expenses',k:'opex',bc:'b',type:'fin'},
     ];
 
@@ -772,16 +772,16 @@ h+=`<div class="kpi-card ${k.cl||''}${opts&&opts.onClick&&i===0?' kpi-selected':
     const selIdx=window._lastExecIdx||0;
     let kh='';
 
-    // Group 1: Serving
+    // Group 1: Serving (green)
     kh+=`<div class="kpi-card green${selIdx===0?' kpi-selected':''}" onclick="clickExecKpi(0)" style="border-top:3px solid var(--green)"><div class="kpi-label" style="font-size:0.62rem">AVG FAMILIES / MO</div><div class="kpi-value">${fam25.toFixed(0)}</div><div class="kpi-change ${fam25>fam24?'up':'down'}">${famChg!=null?((fam25>fam24?'\u25b2':'\u25bc')+' '+(famChg>0?'+':'')+(famChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
-    kh+=`<div class="kpi-card blue${selIdx===1?' kpi-selected':''}" onclick="clickExecKpi(1)" style="border-top:3px solid var(--green)"><div class="kpi-label" style="font-size:0.62rem">AVG INDIVIDUALS / MO</div><div class="kpi-value">${ind25.toFixed(0)}</div><div class="kpi-change ${ind25>ind24?'up':'down'}">${indChg!=null?((ind25>ind24?'\u25b2':'\u25bc')+' '+(indChg>0?'+':'')+(indChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    kh+=`<div class="kpi-card green${selIdx===1?' kpi-selected':''}" onclick="clickExecKpi(1)" style="border-top:3px solid var(--green)"><div class="kpi-label" style="font-size:0.62rem">AVG INDIVIDUALS / MO</div><div class="kpi-value">${ind25.toFixed(0)}</div><div class="kpi-change ${ind25>ind24?'up':'down'}">${indChg!=null?((ind25>ind24?'\u25b2':'\u25bc')+' '+(indChg>0?'+':'')+(indChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
 
-    // Group 2: Efficiency
-    kh+=`<div class="kpi-card green${selIdx===2?' kpi-selected':''}" onclick="clickExecKpi(2)" style="border-top:3px solid var(--accent)"><div class="kpi-label" style="font-size:0.62rem">COST / FAMILY / MO</div><div class="kpi-value">${fmt(Math.round(cpf25))}</div><div class="kpi-change ${cpf25<cpf24?'down':'up'}">${cpfChg!=null?((cpf25<cpf24?'\u25bc':'\u25b2')+' '+(cpfChg>0?'+':'')+(cpfChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
-    kh+=`<div class="kpi-card blue${selIdx===3?' kpi-selected':''}" onclick="clickExecKpi(3)" style="border-top:3px solid var(--accent)"><div class="kpi-label" style="font-size:0.62rem">COST / INDIVIDUAL / MO</div><div class="kpi-value">${fmt(Math.round(cpi25))}</div><div class="kpi-change ${cpi25<cpi24?'down':'up'}">${cpiChg!=null?((cpi25<cpi24?'\u25bc':'\u25b2')+' '+(cpiChg>0?'+':'')+(cpiChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    // Group 2: Efficiency (accent)
+    kh+=`<div class="kpi-card accent${selIdx===2?' kpi-selected':''}" onclick="clickExecKpi(2)" style="border-top:3px solid var(--accent)"><div class="kpi-label" style="font-size:0.62rem">COST / FAMILY / MO</div><div class="kpi-value">${fmt(Math.round(cpf25))}</div><div class="kpi-change ${cpf25<cpf24?'down':'up'}">${cpfChg!=null?((cpf25<cpf24?'\u25bc':'\u25b2')+' '+(cpfChg>0?'+':'')+(cpfChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    kh+=`<div class="kpi-card accent${selIdx===3?' kpi-selected':''}" onclick="clickExecKpi(3)" style="border-top:3px solid var(--accent)"><div class="kpi-label" style="font-size:0.62rem">COST / INDIVIDUAL / MO</div><div class="kpi-value">${fmt(Math.round(cpi25))}</div><div class="kpi-change ${cpi25<cpi24?'down':'up'}">${cpiChg!=null?((cpi25<cpi24?'\u25bc':'\u25b2')+' '+(cpiChg>0?'+':'')+(cpiChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
 
-    // Group 3: Revenue
-    kh+=`<div class="kpi-card green${selIdx===4?' kpi-selected':''}" onclick="clickExecKpi(4)" style="border-top:3px solid var(--warm)"><div class="kpi-label" style="font-size:0.62rem">NET FUNDRAISING</div><div class="kpi-value">${fmtK(df25)}</div><div class="kpi-change ${df25>df24?'up':'down'}">${dfChg!=null?((df25>df24?'\u25b2':'\u25bc')+' '+(dfChg>0?'+':'')+(dfChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
+    // Group 3: Revenue (warm)
+    kh+=`<div class="kpi-card warm${selIdx===4?' kpi-selected':''}" onclick="clickExecKpi(4)" style="border-top:3px solid var(--warm)"><div class="kpi-label" style="font-size:0.62rem">NET FUNDRAISING</div><div class="kpi-value">${fmtK(df25)}</div><div class="kpi-change ${df25>df24?'up':'down'}">${dfChg!=null?((df25>df24?'\u25b2':'\u25bc')+' '+(dfChg>0?'+':'')+(dfChg*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
     kh+=`<div class="kpi-card warm${selIdx===5?' kpi-selected':''}" onclick="clickExecKpi(5)" style="border-top:3px solid var(--warm)"><div class="kpi-label" style="font-size:0.62rem">OPERATING EXPENSES</div><div class="kpi-value">${fmtK(opex25)}</div><div class="kpi-change ${exp25>exp24?'up':'down'}">${expGr!=null?((exp25>exp24?'\u25b2':'\u25bc')+' '+(expGr>0?'+':'')+(expGr*100).toFixed(1)+'% vs 2024'):''}</div></div>`;
 
     $('#exec-kpis').innerHTML=kh;
