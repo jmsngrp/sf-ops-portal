@@ -1246,7 +1246,9 @@ const icGetCost=(ar,yr)=>{
   const opex=D.pnl_by_area[ar]?.[16]?.[yr]||0;
   const fam=((D.mission_v2||{})[yr]||{})[ar]?.avg_families||0;
   const ind=((D.mission_v2||{})[yr]||{})[ar]?.avg_individuals||0;
-  return{fam:fam>0?opex/12/fam:null,ind:ind>0?opex/12/ind:null};
+  const hrs=((D.mission_v2||{})[yr]||{})[ar]?.total_service_hours||0;
+  const volValue=hrs*34.07;
+  return{fam:fam>0?opex/12/fam:null,ind:ind>0?opex/12/ind:null,vol:hrs>0?opex/hrs:null,netVol:hrs>0?volValue-opex:null};
 };
 window._icMetrics=[];
 function renderImpactCost(){
@@ -1258,12 +1260,14 @@ function renderImpactCost(){
   const metrics=[
     {l:'Monthly Cost per Family',k:'fam',cl:'green',lower:1},
     {l:'Monthly Cost per Individual',k:'ind',cl:'blue',lower:1},
+    {l:'Cost per Volunteer Hour',k:'vol',cl:'warm',lower:1},
+    {l:'Net Value of Volunteer Hours',k:'netVol',cl:'accent',lower:0,diverge:1},
   ];
-  window._icMetrics=metrics.map(m=>({l:m.l,k:m.k,lower:m.lower,mfmt:fmt,mbc:m.cl==='green'?'d':'c'}));
+  window._icMetrics=metrics.map(m=>({l:m.l,k:m.k,lower:m.lower,diverge:m.diverge||0,mfmt:m.k==='netVol'?fmtK:fmt,mbc:m.cl==='green'?'d':m.cl==='blue'?'c':m.cl==='warm'?'b':'a'}));
   const kpis=metrics.map(m=>{
     const v25=icAll25[m.k],v24=icAll24[m.k];
     const cc=(v24!=null&&v25!=null&&v24!==0)?(v25-v24)/Math.abs(v24):null;
-    return{l:m.l,v:v25!=null?fmt(Math.round(v25)):'\u2014',c:cc,cl:m.cl,inv:0};
+    return{l:m.l,v:v25!=null?(m.k==='netVol'?fmtK(v25):fmt(Math.round(v25))):'\u2014',c:cc,cl:m.cl,inv:0};
   });
   const renderKpisIC=(kpis,el,opts)=>{let h='';kpis.forEach((k,i)=>{const dir=k.inv?(k.c>0.01?'down':k.c<-0.01?'up':'flat'):(k.c>0.01?'up':k.c<-0.01?'down':'flat');const click=opts&&opts.onClick?' onclick="'+opts.onClick+'('+i+')"':'';
   h+='<div class="kpi-card '+(k.cl||'')+(opts&&opts.onClick&&i===0?' kpi-selected':'')+'"'+click+'><div class="kpi-label">'+k.l+'</div><div class="kpi-value">'+k.v+'</div><div class="kpi-change '+dir+'">'+(k.c!=null?((dir==='up'?'\u25b2':dir==='down'?'\u25bc':'\u2014')+' '+(k.c>0?'+':'')+(k.c*100).toFixed(1)+'% vs 2024'):'')+'</div></div>'});$(el).innerHTML=h};
@@ -1272,32 +1276,129 @@ function renderImpactCost(){
 }
 function renderIcBars(idx){
   const m=window._icMetrics[idx];if(!m)return;
-  const fas=D.field_areas.filter(ar=>ar!=='WI Statewide');
+  const fas=D.field_areas.filter(ar=>ar!=='WI Statewide'&&ar!=='Chippewa Valley');
   let h='';
+
+  // Special case: diverging bar for net value metrics
+  if(m.diverge){
+    // Statewide allocation for loaded values
+    const getAllocD=(yr)=>{
+      const swOpex=D.pnl_by_area['WI Statewide']?.[16]?.[yr]||0;
+      const localTotal=fas.reduce((s,ar)=>s+(D.pnl_by_area[ar]?.[16]?.[yr]||0),0);
+      const alloc={};
+      fas.forEach(ar=>{
+        const localOpex=D.pnl_by_area[ar]?.[16]?.[yr]||0;
+        const share=localTotal>0?localOpex/localTotal:0;
+        alloc[ar]=swOpex*share;
+      });
+      return alloc;
+    };
+    const allocD25=getAllocD('2025'),allocD24=getAllocD('2024');
+    const getLoadedNetVol=(ar,yr)=>{
+      const opex=(D.pnl_by_area[ar]?.[16]?.[yr]||0)+(yr==='2025'?allocD25[ar]||0:allocD24[ar]||0);
+      const hrs=((D.mission_v2||{})[yr]||{})[ar]?.total_service_hours||0;
+      return hrs>0?(hrs*34.07)-opex:null;
+    };
+
+    const vals=fas.map(ar=>{
+      const c25=icGetCost(ar,'2025');
+      const c24=icGetCost(ar,'2024');
+      const f25=getLoadedNetVol(ar,'2025');
+      const f24=getLoadedNetVol(ar,'2024');
+      return{ar,v25:c25[m.k],v24:c24[m.k],f25,f24};
+    }).filter(x=>x.v25!=null);
+    vals.sort((a,b)=>b.v25-a.v25);
+    const maxAbs=Math.max(...vals.map(x=>Math.max(Math.abs(x.v25),Math.abs(x.v24||0),Math.abs(x.f25||0),Math.abs(x.f24||0))));
+
+    const divBar=(v,h_px,op)=>{
+      const barPct=maxAbs>0?Math.abs(v)/maxAbs*50:0;
+      const barCol=v>=0?'var(--green)':'var(--rose)';
+      const opStyle=op<1?'opacity:'+op+';':'';
+      if(v<0){
+        return '<div style="display:flex;height:'+h_px+'px;'+opStyle+'"><div style="width:'+(50-barPct)+'%"></div><div style="width:'+barPct+'%;background:'+barCol+';border-radius:4px 0 0 4px"></div><div style="width:1px;background:var(--border)"></div><div style="width:50%;background:transparent"></div></div>';
+      } else {
+        return '<div style="display:flex;height:'+h_px+'px;'+opStyle+'"><div style="width:50%;background:transparent"></div><div style="width:1px;background:var(--border)"></div><div style="width:'+barPct+'%;background:'+barCol+';border-radius:0 4px 4px 0"></div><div style="flex:1"></div></div>';
+      }
+    };
+
+    vals.forEach(({ar,v25,v24,f25,f24})=>{
+      const vc5=v25>=0?'var(--green)':'var(--rose)';
+      const vcf5=f25!=null?(f25>=0?'var(--green)':'var(--rose)'):'';
+      const vc4=v24!=null?(v24>=0?'var(--green)':'var(--rose)'):'';
+      const vcf4=f24!=null?(f24>=0?'var(--green)':'var(--rose)'):'';
+      h+='<div style="margin-bottom:1.8rem">';
+      h+='<div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">'+areaLabel(ar)+'</span></div>';
+      // 2025 local
+      h+='<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div style="flex:1;background:var(--surface2);border-radius:4px;overflow:hidden">'+divBar(v25,22,1)+'</div><span style="font-size:0.85rem;font-weight:900;min-width:160px;text-align:left;padding-left:0.5rem;color:'+vc5+'">'+fmtK(v25)+' <span style="font-size:0.68rem;color:'+(vcf5)+'">('+(f25!=null?fmtK(f25):'—')+' loaded)</span></span></div>';
+      // 2025 loaded (thinner bar beneath)
+      if(f25!=null)h+='<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.3rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px"></span><div style="flex:1;background:var(--surface2);border-radius:4px;overflow:hidden">'+divBar(f25,10,0.4)+'</div><span style="min-width:160px"></span></div>';
+      // 2024 local
+      if(v24!=null)h+='<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div style="flex:1;background:var(--surface2);border-radius:4px;overflow:hidden">'+divBar(v24,8,0.5)+'</div><span style="font-size:0.68rem;min-width:160px;text-align:left;padding-left:0.5rem;color:'+vc4+'">'+fmtK(v24)+' <span style="font-size:0.62rem;color:'+vcf4+'">('+fmtK(f24)+' loaded)</span></span></div>';
+      h+='</div>';
+    });
+
+    h+='<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Local Costs Only</div><div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:0.4"></div>Fully Loaded</div></div>';
+    h+='<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem">Based on $34.07/hr national value of volunteer time. Green = volunteer value exceeds operating costs.</div>';
+    $('#ic-area-bars').innerHTML=h;
+    buildViewSelector('#ic-area-title',m.l+' ');
+    return;
+  }
+
+  // Calculate statewide allocation proportional to each area's share of local opex
+  const getAlloc=(yr)=>{
+    const swOpex=D.pnl_by_area['WI Statewide']?.[16]?.[yr]||0;
+    const localTotal=fas.reduce((s,ar)=>s+(D.pnl_by_area[ar]?.[16]?.[yr]||0),0);
+    const alloc={};
+    fas.forEach(ar=>{
+      const localOpex=D.pnl_by_area[ar]?.[16]?.[yr]||0;
+      const share=localTotal>0?localOpex/localTotal:0;
+      alloc[ar]=swOpex*share;
+    });
+    return alloc;
+  };
+  const alloc25=getAlloc('2025'),alloc24=getAlloc('2024');
+
+  const getCostLoaded=(ar,yr)=>{
+    const opex=(D.pnl_by_area[ar]?.[16]?.[yr]||0)+(yr==='2025'?alloc25[ar]||0:alloc24[ar]||0);
+    const fam=((D.mission_v2||{})[yr]||{})[ar]?.avg_families||0;
+    const ind=((D.mission_v2||{})[yr]||{})[ar]?.avg_individuals||0;
+    const hrs=((D.mission_v2||{})[yr]||{})[ar]?.total_service_hours||0;
+    return{fam:fam>0?opex/12/fam:null,ind:ind>0?opex/12/ind:null,vol:hrs>0?opex/hrs:null};
+  };
 
   const vals=fas.map(ar=>{
     const c25=icGetCost(ar,'2025');
     const c24=icGetCost(ar,'2024');
-    return{ar,v25:c25[m.k],v24:c24[m.k]};
-  }).filter(x=>x.v25!=null);
+    const f25=getCostLoaded(ar,'2025');
+    const f24=getCostLoaded(ar,'2024');
+    return{ar,v25:c25[m.k],v24:c24[m.k],f25:f25[m.k],f24:f24[m.k]};
+  }).filter(x=>x.f25!=null);
 
   vals.sort((a,b)=>a.v25-b.v25);
-  const maxV=Math.max(...vals.map(x=>x.v25));
+  const maxV=Math.max(...vals.map(x=>x.f25||0));
 
-  vals.forEach(({ar,v25,v24})=>{
+  const bcToColor={'d':'var(--green)','c':'var(--blue)','b':'var(--warm)'};
+  const barCol=bcToColor[m.mbc]||'var(--green)';
+
+  vals.forEach(({ar,v25,v24,f25,f24})=>{
     const cc=yoy(v24,v25);
     const good=cc<0;
     const chgCol=cc!=null?(good?'var(--green)':'var(--rose)'):'var(--text-dim)';
     const pct2=cc!=null?(cc>=0?'+':'')+(cc*100).toFixed(0)+'%':'';
-    const w25=maxV>0?v25/maxV*100:0;
-    const w24=v24!=null&&maxV>0?v24/maxV*100:0;
-    const display25=fmt(Math.round(v25));
-    const display24=v24!=null?fmt(Math.round(v24)):'';
+    const localW=maxV>0?v25/maxV*100:0;
+    const allocW=maxV>0?(f25-v25)/maxV*100:0;
+    const localW24=v24!=null&&maxV>0?v24/maxV*100:0;
+    const allocW24=f24!=null&&v24!=null&&maxV>0?(f24-v24)/maxV*100:0;
+
     h+=`<div style="margin-bottom:1.8rem"><div style="margin-bottom:0.3rem"><span style="font-size:0.95rem;font-weight:800;color:var(--text)">${areaLabel(ar)}</span></div>`;
-    h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div class="bar-fill ${m.mbc}" style="width:${w25}%"></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:110px;text-align:left;padding-left:0.5rem">${display25}${pct2?' <span style="color:'+chgCol+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
-    if(v24!=null)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div class="bar-fill ${m.mbc}" style="width:${w24}%;opacity:0.5"></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:110px;text-align:left;padding-left:0.5rem">${display24}</span></div>`;
+    // 2025: segmented bar
+    h+=`<div style="display:flex;align-items:center;gap:0.4rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px;font-weight:700">2025</span><div class="bar-track" style="flex:1;height:22px"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${localW}%;background:${barCol}"></div><div style="width:${allocW}%;background:${barCol};opacity:0.3"></div></div></div><span style="font-size:0.85rem;font-weight:900;color:var(--text);min-width:140px;text-align:left;padding-left:0.5rem">${fmt(Math.round(v25))} <span style="font-size:0.68rem;color:var(--text-dim)">(${fmt(Math.round(f25))} loaded)</span>${pct2?' <span style="color:'+chgCol+';font-weight:800;font-size:0.72rem">'+pct2+'</span>':''}</span></div>`;
+    // 2024
+    if(v24!=null)h+=`<div style="display:flex;align-items:center;gap:0.4rem;margin-top:0.5rem"><span style="font-size:0.7rem;color:var(--text-muted);width:28px">2024</span><div class="bar-track" style="flex:1;height:8px"><div style="display:flex;height:100%;border-radius:4px;overflow:hidden"><div style="width:${localW24}%;background:${barCol};opacity:0.5"></div><div style="width:${allocW24}%;background:${barCol};opacity:0.15"></div></div></div><span style="font-size:0.68rem;color:var(--text-dim);min-width:140px;text-align:left;padding-left:0.5rem">${fmt(Math.round(v24))} <span style="font-size:0.62rem">(${fmt(Math.round(f24))} loaded)</span></span></div>`;
     h+=`</div>`;
   });
+
+  h+=`<div class="legend" style="margin-top:0.6rem"><div class="legend-item"><div class="legend-dot" style="background:${barCol}"></div>Local Costs</div><div class="legend-item"><div class="legend-dot" style="background:${barCol};opacity:0.3"></div>+ Statewide Allocation</div></div>`;
 
   $('#ic-area-bars').innerHTML=h;
   buildViewSelector('#ic-area-title',m.l+' ');
